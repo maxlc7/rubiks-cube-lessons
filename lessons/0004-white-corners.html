@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 4 — The White Corners (Your First Algorithm)</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;}
+  h1{font-size:2.4rem; line-height:1.12; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;}
+  .algo{text-align:center; margin:18px 0;}
+  .algo .mv{font-size:1.15rem; padding:6px 14px; margin:0 3px;}
+  .mission{background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;}
+  .mission strong{color:var(--amber);}
+  .big-idea{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.3rem; line-height:1.4; margin:0; font-weight:600;}
+  .callback{background:#eef3fb; border:1px solid #cdddf5; border-left:4px solid var(--blue);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .callback strong{color:#1f4fa8;}
+  .flip{background:#fdf3f2; border:1px solid #f0cfc9; border-left:4px solid var(--accent);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .flip strong{color:var(--accent);}
+  .key{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .key strong{color:#5b3fb0;}
+  .hands{background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px; padding:18px 22px; margin:22px 0;}
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ ";}
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; background:#faf9f6;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;}
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .ceiling strong{color:#5b3fb0;}
+  .ask{margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;}
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 4</p>
+  <h1>The White Corners</h1>
+  <p class="sub">You finish the first layer — and meet your first real algorithm. One you've already felt.</p>
+
+  <p class="recall"><b>From Lesson 3:</b> you built a true white cross by reasoning — four edges home,
+  side colors matched. The first layer is <em>almost</em> done. What's left are the four <b>white
+  corners</b> that fill the gaps between your cross edges.</p>
+
+  <div class="mission">
+    <strong>Why this lesson?</strong> Corners are where intuition runs out — placing one without a tool
+    tends to wreck your cross. So this is the moment an <em>algorithm</em> earns its keep: a short,
+    memorized move-string that does one controlled job and puts everything else back. Your mission is
+    to understand <em>why</em> the algorithm works, not chant it — and you're perfectly set up, because
+    you already discovered this exact sequence with your own hands.
+  </div>
+
+  <div class="callback">
+    <strong>You've met this move before.</strong> In Lesson 2 you did <span class="mv">R</span>
+    <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> six times
+    and the cube returned to solved. That told you it's a <em>controlled cycle</em> — it disturbs only a
+    handful of pieces and always comes back around. Now you'll aim that cycle at a single corner and ride
+    it home. Same move, real job.
+  </div>
+
+  <div class="flip">
+    <strong>First, flip the cube over.</strong> For this stage, turn the whole cube so your
+    <b>white cross is on the BOTTOM</b> (white down, yellow center up).<sup><a href="#r1">1</a></sup>
+    Why? We build the finished first layer on the bottom and use the open <b>top</b> (yellow) layer as a
+    free staging area to maneuver corners — without ever touching the layer we've already solved. From
+    here on, "U" means the yellow top.
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>A white corner has 3 colors and exactly one home — the single bottom slot where all three colors
+    meet their matching centers. Park it in the top right above that slot, then screw it in.</p>
+  </div>
+
+  <h2>The algorithm — the "right-hand 4-move"</h2>
+  <p>Hold the cube with white on the bottom. The insertion tool is:<sup><a href="#r1">1</a></sup></p>
+  <div class="algo">
+    <span class="mv">R</span> <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span>
+  </div>
+  <p>Read it as a little story about the <b>front-right-bottom</b> slot (your target):
+  <span class="mv">R</span> lifts the slot's contents up into the top; <span class="mv">U</span> spins the
+  top to swap in your waiting corner; <span class="mv p">R'</span> brings the column back down;
+  <span class="mv p">U'</span> tidies the top back. One pass takes the corner up, turns it, and sets it
+  back down a little differently. Repeat it and the corner <em>screws</em> into place — white landing on
+  the bottom — in at most 3 passes.</p>
+
+  <div class="key">
+    <strong>Why it doesn't wreck your cross.</strong> Every <span class="mv">R</span> is later undone by
+    an <span class="mv p">R'</span>, and every <span class="mv">U</span> by a <span class="mv p">U'</span>
+    — it's nearly a complete self-cancel (that's why 6 reps returned to solved in Lesson 2). The only
+    thing that <em>doesn't</em> fully cancel is the one corner riding in the front-right. So the sequence
+    is a scalpel: it changes that corner and leaves the rest — including your whole cross — untouched.
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: fill all four corners <span class="win">~10 min · first layer DONE</span></h3>
+    <ol class="steps">
+      <li><b>Cube on white-bottom, yellow-up.</b> Look at the <em>top</em> (yellow) layer and find a
+      corner piece that has <b>white</b> on it. (A corner has 3 colors — Lesson 1.)</li>
+      <li><b>Read its other two colors</b> and find where it belongs: the bottom slot sitting between
+      those two matching side centers. Example: a white+green+orange corner belongs where the green and
+      orange faces meet.</li>
+      <li><b>Park it above its slot.</b> Turn just the <b>top (U)</b> layer until that white corner sits
+      in the top, directly <em>above</em> its target slot.</li>
+      <li><b>Hold the target slot at front-right</b>, then do <span class="mv">R</span> <span class="mv">U</span>
+      <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span>. Look. Not in yet? Do it again.
+      Repeat (max 3×) until the corner clicks home: white on the bottom, both side colors matching.</li>
+      <li><b>Repeat for all 4 white corners.</b> Each time: find a white corner up top → park above its
+      slot → hold that slot front-right → 4-move until seated.</li>
+      <li><b>First layer complete.</b> The entire white face is solid white, and the top row of all four
+      sides shows a matching band of color. That's <em>two</em> full layers' worth of pieces locked in.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just learned:</b> an algorithm isn't magic — it's a sequence
+    engineered to <em>mostly cancel itself</em>, leaving one tiny, intended change. You'll reuse this
+    exact idea for the rest of the solve.</p>
+  </div>
+
+  <div class="snag">
+    <h4>Snag — a white corner is stuck in the BOTTOM, in the wrong spot or twisted</h4>
+    <p style="margin:0;">If a white corner is jammed in a bottom slot incorrectly, you can't fix it from
+    up top. Pop it out: hold that bad slot at front-right and do <span class="mv">R</span> <span class="mv">U</span>
+    <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> once — it kicks the corner up into the
+    top layer. Now solve it normally.<sup><a href="#r1">1</a></sup></p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>Understand the tool 🔧</h3>
+
+    <div class="q" data-correct="c">
+      <div class="qt">1. Why do we flip the cube so the white cross is on the bottom for this stage?</div>
+      <button class="opt" data-k="a">Because corners only work when white is down</button>
+      <button class="opt" data-k="b">To make the cube heavier and steadier</button>
+      <button class="opt" data-k="c">So the finished layer is out of the way and we can stage corners freely in the open top layer</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="b">
+      <div class="qt">2. Why doesn't repeating <span class="mv">R</span> <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> destroy your white cross?</div>
+      <button class="opt" data-k="a">Because the cross is glued in place once built</button>
+      <button class="opt" data-k="b">Because the R's and U's nearly cancel each other out — only the front-right corner actually changes</button>
+      <button class="opt" data-k="c">Because white pieces are protected</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. You found a white corner already in the bottom layer, but twisted wrong. What's the move?</div>
+      <button class="opt" data-k="a">Hold it front-right, do the 4-move once to pop it up top, then re-insert it correctly</button>
+      <button class="opt" data-k="b">Leave it — it'll fix itself in a later stage</button>
+      <button class="opt" data-k="c">Pull the piece out by hand</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Where this is heading.</strong> With the first layer done, two-thirds of the cube is solved
+    and you've got a real algorithm in your hands. Stage 3 (the middle layer) uses a close cousin of this
+    same 4-move to slot the equator edges. And once we reach the <em>last</em> layer, "algorithm as a
+    controlled cycle" becomes the whole game — you'll learn to <em>read</em> a case and pick the cycle that
+    fixes it. That's the literacy you came for.
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Corner won't seat after 3 tries? Tell me its
+    three colors and where it is and I'll walk the exact turns. Lost track of which slot is "home"? Send a
+    photo. When your entire first layer is done — solid white face, matching side bands — tell me
+    <kbd>done</kbd> and I'll build Lesson 5: <em>the middle layer</em>.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">First-layer corner method, white cross on bottom, right-hand 4-move <code>R U R' U'</code>, and the pop-out fix — <a href="https://www.jperm.net/3x3">J Perm, How To Solve The 3×3</a>, Step 2.</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 4 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {ok:"✓ Exactly. You get the tool, not just the steps.", no:"Not quite — re-read the section above and try again."};
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){btn.classList.add('correct'); fb.textContent=msgs.ok; fb.className='fb show ok';}
+        else{btn.classList.add('wrong'); q.querySelector('[data-k="'+correct+'"]').classList.add('correct'); fb.textContent=msgs.no; fb.className='fb show no';}
+      });
+    });
+  });
+</script>
+</body>
+</html>

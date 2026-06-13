@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 6 — The Middle Layer (two mirror algorithms)</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#d9d6cf;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;}
+  h1{font-size:2.4rem; line-height:1.12; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;} .mv.x2{background:#1f7a4d;}
+  .algo{text-align:center; margin:18px 0; line-height:2.2;}
+  .algo .mv{font-size:1.1rem; padding:6px 13px; margin:0 2px;}
+  .algobox{background:#1a1a1a; border-radius:12px; padding:18px 16px; margin:14px 0; text-align:center;}
+  .algobox .nm{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:#ffd400; margin-bottom:12px;}
+  .algobox .algo{margin:0;}
+  .mission{background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;}
+  .mission strong{color:var(--amber);}
+  .big-idea{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.3rem; line-height:1.4; margin:0; font-weight:600;}
+  .callback{background:#eef3fb; border:1px solid #cdddf5; border-left:4px solid var(--blue);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .callback strong{color:#1f4fa8;}
+  .flip{background:#fdf3f2; border:1px solid #f0cfc9; border-left:4px solid var(--accent);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .flip strong{color:var(--accent);}
+  .key{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .key strong{color:#5b3fb0;}
+  .hands{background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px; padding:18px 22px; margin:22px 0;}
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ ";}
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; background:#faf9f6;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;}
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .ceiling strong{color:#5b3fb0;}
+  .ask{margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;}
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  /* cube diagrams */
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);}
+  .x{background:var(--c-gray); box-shadow:none; border-style:dashed;}
+  .face{display:inline-grid; grid-template-columns:repeat(3,34px); gap:5px; padding:8px;
+    background:#2b2b2b; border-radius:10px;}
+  .diagram{display:flex; gap:30px; flex-wrap:wrap; align-items:center; justify-content:center; margin:8px 0 4px;}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:6px 0 0; font-style:italic;}
+  .dwrap{margin:22px 0;}
+  .arrow{font-size:2rem; color:var(--accent); font-weight:700;}
+  .stk{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .stk .lbl{font-size:.7rem; font-family:ui-monospace,monospace; color:var(--muted);}
+
+  /* interactive lab */
+  .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .lab h3{margin-top:0;} .lab h3::before{content:"🧭 ";}
+  .cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin:14px 0 4px;}
+  .mcard{background:#faf9f6; border:1px solid var(--line); border-radius:12px; padding:16px 14px; width:210px; text-align:center;}
+  .mcard .scene{display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px;}
+  .mcard .cell{width:30px; height:30px;}
+  .mcard .ctxt{font-size:.8rem; color:#444; margin:8px 0 10px; min-height:3.6em;}
+  .mbtns{display:flex; gap:8px; justify-content:center;}
+  .mbtn{flex:1; cursor:pointer; font:inherit; font-size:.86rem; padding:7px 4px; border-radius:8px;
+    border:1px solid var(--line); background:#fff; transition:.15s;}
+  .mbtn:hover{background:#f1eee8;}
+  .mbtn.gd{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .mbtn.bd{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .mfb{font-size:.8rem; margin-top:9px; min-height:1.2em; font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 6</p>
+  <h1>The Middle Layer</h1>
+  <p class="sub">Two layers down. Now you fill the belt around the middle — with one algorithm and its mirror image.</p>
+
+  <p class="recall"><b>From Lessons 4 & 5:</b> you built a true matched cross and seated all four white corners.
+  The entire first layer is solid — white face complete, a matching color band wrapping all four sides. Flip
+  nothing: keep <b>white on the bottom, yellow on top</b>.</p>
+
+  <div class="mission">
+    <strong>Why this lesson?</strong> The middle layer is the cube's "equator" — the four edges that sit between
+    your finished corners. Here you stop hoping pieces fall into place and learn to <em>deliberately insert</em>
+    one, choosing left or right by reading the piece. You'll also meet a beautiful idea that runs the rest of the
+    cube: <em>an algorithm and its mirror do the same job in opposite directions.</em>
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>The four middle edges are the only edges with <em>no yellow</em>. Find one up top, aim it at the slot it
+    belongs in, and decide one thing: does it go <em>left</em> or <em>right</em>?</p>
+  </div>
+
+  <div class="callback">
+    <strong>Yellow is your "not yet" flag.</strong> Every middle-layer edge has two colors and <em>neither is
+    yellow</em> (yellow edges belong in the last layer, so leave them on top). So your first move each time is a
+    filter: spot a top edge with no yellow — that's a middle piece looking for its home.
+  </div>
+
+  <h2>The decision: left or right?</h2>
+  <p>Hold the cube white-down, yellow-up. Pick a top edge with no yellow. It has a color on the <b>side</b>
+  (facing you, on the front) and a color on <b>top</b>. Do this:</p>
+  <ol class="steps">
+    <li><b>Turn the top</b> (<span class="mv">U</span>) until the edge's <em>front</em> color matches the
+      <em>front center</em>. Now it makes a little vertical bar of one color down the front face — a "T".</li>
+    <li><b>Read the edge's TOP color.</b> That color belongs to a side center — and it's either the center on your
+      <em>right</em> or the one on your <em>left</em>. That's the direction the edge needs to travel.</li>
+  </ol>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="stk">
+        <div class="lbl">top sticker → goes RIGHT</div>
+        <div class="face">
+          <span class="cell x"></span><span class="cell g"></span><span class="cell x"></span>
+          <span class="cell x"></span><span class="cell g"></span><span class="cell x"></span>
+          <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        </div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stk">
+        <div class="lbl">red center is on the right</div>
+        <div class="face">
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+          <span class="cell x"></span><span class="cell r"></span><span class="cell x"></span>
+          <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        </div>
+      </div>
+    </div>
+    <p class="dcap">Front face shows a green bar (edge's front = green center = matched). The edge's <b>top</b>
+    sticker is red, and the red center sits to the right → this edge goes <b>right</b>.</p>
+  </div>
+
+  <h2>The two algorithms (one is just the mirror of the other)</h2>
+  <p>With the edge's front color matched to the front center, choose by the top color's direction:</p>
+
+  <div class="algobox">
+    <div class="nm">▶ Insert to the RIGHT</div>
+    <div class="algo">
+      <span class="mv">U</span> <span class="mv">R</span> <span class="mv p">U&#39;</span> <span class="mv p">R&#39;</span>
+      <span class="mv p">U&#39;</span> <span class="mv p">F&#39;</span> <span class="mv">U</span> <span class="mv">F</span>
+    </div>
+  </div>
+  <div class="algobox">
+    <div class="nm">◀ Insert to the LEFT</div>
+    <div class="algo">
+      <span class="mv p">U&#39;</span> <span class="mv p">L&#39;</span> <span class="mv">U</span> <span class="mv">L</span>
+      <span class="mv">U</span> <span class="mv">F</span> <span class="mv p">U&#39;</span> <span class="mv p">F&#39;</span>
+    </div>
+  </div>
+
+  <div class="key">
+    <strong>Look closely — they're reflections.</strong> The left algorithm is the right one held up to a mirror:
+    every <span class="mv">R</span> becomes <span class="mv">L</span>, every turn flips its direction
+    (<span class="mv">U</span> ↔ <span class="mv p">U'</span>), and front stays front. You're not memorizing two
+    unrelated strings — you're learning <em>one</em> move and its reflection. That mirror trick comes back again
+    and again on the last layer.<sup><a href="#r1">1</a></sup>
+  </div>
+
+  <div class="key">
+    <strong>Why it doesn't wreck the layers below.</strong> Same logic as your corner move, just longer: the
+    sequence briefly lifts a first-layer pair up top, swaps your edge in, then puts the borrowed pair back exactly
+    where it was. Almost everything cancels; the one lasting change is your edge dropping into the belt. A scalpel,
+    not a sledgehammer.<sup><a href="#r1">1</a></sup>
+  </div>
+
+  <div class="lab">
+    <h3>Practice: which way does it go? <span class="win">tap to check</span></h3>
+    <p style="margin-top:0; font-size:.94rem;">In each case the edge's front color is already matched to the front
+    center. You're told the edge's <b>top</b> color and which neighbor center it matches. Pick the direction.</p>
+    <div class="cards">
+      <div class="mcard" data-ok="right">
+        <div class="scene"><span class="cell o"></span></div>
+        <div class="ctxt">Edge's top sticker is <b>orange</b>. The orange center is on your <b>right</b>.</div>
+        <div class="mbtns"><button class="mbtn" data-v="left">◀ Left</button><button class="mbtn" data-v="right">Right ▶</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="left">
+        <div class="scene"><span class="cell b"></span></div>
+        <div class="ctxt">Edge's top sticker is <b>blue</b>. The blue center is on your <b>left</b>.</div>
+        <div class="mbtns"><button class="mbtn" data-v="left">◀ Left</button><button class="mbtn" data-v="right">Right ▶</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="skip">
+        <div class="scene"><span class="cell y"></span></div>
+        <div class="ctxt">The edge has a <b>yellow</b> sticker on it. Where does it belong?</div>
+        <div class="mbtns"><button class="mbtn" data-v="mid">Middle layer</button><button class="mbtn" data-v="skip">Leave it up top</button></div>
+        <div class="mfb"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: fill all four belt edges <span class="win">~10 min · three layers DONE</span></h3>
+    <ol class="steps">
+      <li><b>White down, yellow up.</b> Scan the top layer for an edge with <b>no yellow</b>.</li>
+      <li><b>Match its front color</b> to the front center with <span class="mv">U</span> turns (make the colored bar / "T").</li>
+      <li><b>Read its top color</b> → decide left or right.</li>
+      <li><b>Run the matching algorithm</b> (right or left) once. The edge screws down into the belt; the layers
+        below come back intact.</li>
+      <li><b>Repeat for all four belt edges.</b> When you run out of no-yellow edges on top, check the snag below.</li>
+      <li><b>Two layers fully solved.</b> The bottom two-thirds of every face is one solid color. Only the yellow
+        top layer remains.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just learned:</b> deliberate insertion — read a piece, choose a
+    direction, deploy the matching tool. And that algorithms come in mirror pairs.</p>
+  </div>
+
+  <div class="snag">
+    <h4>Snag — no usable edge on top (they're all yellow), but the middle isn't done</h4>
+    <p style="margin:0;">That means a middle edge is stuck in a belt slot the wrong way (flipped or in the wrong
+    home). You can't fix it from up top, so <b>kick it out</b>: put any spare top edge above that bad slot, hold
+    the slot at front-right, and run the <b>right-insert</b> once. It boots the wrong edge up to the top layer —
+    now match it and insert it properly.<sup><a href="#r1">1</a></sup></p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>Understand the belt 🧠</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. How do you recognize an edge that belongs in the middle layer?</div>
+      <button class="opt" data-k="a">It has a white sticker</button>
+      <button class="opt" data-k="b">It has no yellow sticker (two non-yellow colors)</button>
+      <button class="opt" data-k="c">It's already in the bottom layer</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. After matching the edge's front color to the front center, what tells you left vs right?</div>
+      <button class="opt" data-k="a">The color of the bottom layer</button>
+      <button class="opt" data-k="b">Whichever hand feels easier</button>
+      <button class="opt" data-k="c">The edge's TOP color — you send it toward the side center that color matches</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. What's the relationship between the left and right insert algorithms?</div>
+      <button class="opt" data-k="a">They're mirror images — same idea, opposite direction</button>
+      <button class="opt" data-k="b">They're completely unrelated and must be memorized separately</button>
+      <button class="opt" data-k="c">The left one is the right one done twice</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Where this is heading.</strong> With two layers done, only the <b>yellow last layer</b> is left — and
+    that's where the real cube literacy lives. It splits into two jobs you'll learn to <em>read</em>: first
+    <em>orient</em> the last layer (get all yellow facing up), then <em>permute</em> it (slide the pieces to their
+    correct seats). That place-vs-facing split you've felt since Lesson 1 becomes the whole game. Next up,
+    <b>Lesson 7: the yellow cross.</b>
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Edge won't seat, or keeps going in flipped? Tell me its
+    two colors and where it is, and I'll give you the exact turns. Can't tell left from right on a piece? Send a
+    photo. When both bottom layers are solid and only yellow remains, tell me <kbd>middle done</kbd> and I'll
+    build the yellow cross.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Second-layer edges, the right/left insert algorithms <code>U R U' R' U' F' U F</code> /
+      <code>U' L' U L U F U' F'</code>, and the kick-out fix — <a href="https://www.jperm.net/3x3">J Perm, How To
+      Solve The 3×3</a>, Step 3.</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 6 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {ok:"✓ Exactly. You get the why, not just the steps.", no:"Not quite — re-read the section above and try again."};
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){btn.classList.add('correct'); fb.textContent=msgs.ok; fb.className='fb show ok';}
+        else{btn.classList.add('wrong'); q.querySelector('[data-k="'+correct+'"]').classList.add('correct'); fb.textContent=msgs.no; fb.className='fb show no';}
+      });
+    });
+  });
+
+  document.querySelectorAll('.mcard').forEach(function(card){
+    var ok = card.getAttribute('data-ok');
+    var fb = card.querySelector('.mfb');
+    var notes = {
+      right:"✓ Right — send it toward the matching center.",
+      left:"✓ Left — send it toward the matching center.",
+      skip:"✓ Yes — a yellow edge belongs in the LAST layer. Leave it on top for now.",
+      wrong:"✗ Look again — the edge travels toward the side center its top color matches."
+    };
+    card.querySelectorAll('.mbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.getAttribute('data-v');
+        card.querySelectorAll('.mbtn').forEach(function(b){b.classList.remove('gd','bd');});
+        var right = (v === ok);
+        btn.classList.add(right ? 'gd' : 'bd');
+        if(right){ fb.textContent = notes[ok]; fb.style.color = '#1d6b3c'; }
+        else { fb.textContent = notes.wrong; fb.style.color = '#9a2b1e'; }
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rubik's Cube — Glossary</title>
+<style>
+  :root{--ink:#1a1a1a;--paper:#fbfaf7;--line:#e4e0d8;--accent:#c0392b;--blue:#2d6cdf;--muted:#6b6b6b;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;line-height:1.55;}
+  .wrap{max-width:680px;margin:0 auto;padding:48px 28px 80px;}
+  .kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 8px;}
+  h1{font-size:2.1rem;margin:0 0 4px;}
+  .sub{color:var(--muted);font-style:italic;margin:0 0 28px;}
+  dl{margin:0;}
+  dt{font-weight:700;font-size:1.08rem;margin:22px 0 2px;padding-top:14px;border-top:1px solid var(--line);}
+  dt:first-of-type{border-top:none;padding-top:0;}
+  dt .tag{font-family:ui-monospace,monospace;font-size:.62em;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--blue);border-radius:20px;padding:2px 8px;vertical-align:middle;margin-left:8px;}
+  dt .tag.core{background:var(--accent);}
+  dd{margin:0;color:#333;}
+  dd em{color:var(--muted);}
+  code{font-family:ui-monospace,monospace;background:#eee;border-radius:4px;padding:1px 5px;font-size:.88em;}
+  .note{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Rubik's Cube · Reference</p>
+  <h1>Glossary</h1>
+  <p class="sub">The canonical vocabulary for this course. Terms get added as we go.</p>
+
+  <dl>
+    <dt>Piece (cubie) <span class="tag core">core</span></dt>
+    <dd>One of the physical little cubes that make up the puzzle. A piece carries its
+    stickers as a fixed unit — turning a face moves whole pieces, never individual stickers.
+    A 3×3 has 26 cubies, but only <strong>20 move</strong> (the 6 centers are fixed).</dd>
+
+    <dt>Center <span class="tag">piece type</span></dt>
+    <dd>A piece with <strong>1 sticker</strong>. There are 6, one per face, bolted to the
+    internal core. They never change position relative to each other, so the center's color
+    <em>defines</em> that face's color. <em>Anchor of the whole cube.</em></dd>
+
+    <dt>Edge <span class="tag">piece type</span></dt>
+    <dd>A piece with <strong>2 stickers</strong>, sitting between two centers. There are 12.
+    Has a home slot determined by its two colors, and a correct orientation.</dd>
+
+    <dt>Corner <span class="tag">piece type</span></dt>
+    <dd>A piece with <strong>3 stickers</strong>, at the cube's 8 corners. There are 8. The
+    trickiest type because a corner can be in its home slot yet <em>twisted</em> the wrong way.</dd>
+
+    <dt>Permutation (placement) <span class="tag core">core</span></dt>
+    <dd>Where a piece <em>is</em> — which slot it occupies. A piece is "permuted correctly"
+    when it's in its home slot, regardless of which way it faces.</dd>
+
+    <dt>Orientation <span class="tag core">core</span></dt>
+    <dd>Which way a piece is <em>turned</em> within its slot. A piece is fully solved only
+    when it is both <strong>permuted</strong> (right place) <strong>and oriented</strong>
+    (right way around). This place-vs-facing distinction is the backbone of last-layer solving.</dd>
+
+    <dt>Two ways to name a face <span class="tag core">core</span></dt>
+    <dd><strong>By position</strong> (U/D/F/B/R/L) = where a face points <em>relative to you</em> —
+    these <em>change</em> when you rotate the whole cube. <strong>By color</strong> = the center's
+    color, which is bolted to the core and <em>never changes</em> — the "white face" is always the
+    white-center face. Position names move; color names are permanent identity.</dd>
+
+    <dt>Notation (U D F B R L) <span class="tag core">core</span></dt>
+    <dd>The move language. Each letter = a face relative to you: <strong>U</strong>p, <strong>D</strong>own,
+    <strong>F</strong>ront, <strong>B</strong>ack, <strong>R</strong>ight, <strong>L</strong>eft.
+    A bare letter means turn that face a quarter-turn (90°) <strong>clockwise — as seen looking
+    straight at that face</strong>. <em>(J Perm, Move Notation)</em></dd>
+
+    <dt>Color scheme &amp; opposite pairs <span class="tag">reference</span></dt>
+    <dd>Standard (Western) cube. The 6 centers sit in fixed <strong>opposite pairs</strong> that can
+    never separate: <strong>White ↔ Yellow</strong>, <strong>Blue ↔ Green</strong>,
+    <strong>Red ↔ Orange</strong>. So with white up, yellow is always down; with blue in front,
+    green is always at the back. <em>Massimo's cube, working setup: White=Up, Yellow=Down,
+    Orange=Front, Red=Back, Green=Right, Blue=Left. (Position labels move if you turn the whole
+    cube; the opposite pairs never do.)</em></dd>
+
+    <dt>Prime ( ' ) and double ( 2 ) <span class="tag">notation</span></dt>
+    <dd><code>R'</code> ("R prime") = quarter-turn <strong>counter-clockwise</strong> — the exact
+    undo of <code>R</code>. <code>R2</code> = <strong>half-turn</strong> (180°), direction irrelevant.
+    Six faces × three flavours = the 18 basic moves; every solve is a string of these.</dd>
+
+    <dt>Matched (true) cross <span class="tag core">core</span></dt>
+    <dd>The real goal of Stage 1 — not just four white stickers forming a <strong>+</strong> on the white
+    face, but each white edge's <em>second</em> color also matching the center beside it. A "white cross"
+    with mismatched side colors is a <strong>fake cross</strong>: it looks done but is built crooked, and
+    every later stage inherits the error. <em>A piece is only home when ALL its colors are right.</em></dd>
+
+    <dt>Daisy <span class="tag">technique</span></dt>
+    <dd>The foolproof way to build a matched cross. Hold yellow on top / white on bottom and gather the four
+    white edges as "petals" around the yellow center (white facing up), ignoring side colors. Then, one at a
+    time: turn the top until a petal's side color sits above its <em>matching</em> center, and turn that face
+    <strong>180°</strong> to drop the edge straight down — matched before the drop, so matched after.
+    Each edge uses a different face, so placed edges never collide. <em>(J Perm, the cross)</em></dd>
+
+    <dt>Algorithm <span class="tag core">core</span></dt>
+    <dd>A named, written string of moves with a <em>known, controlled effect</em> on the pieces —
+    not a random scramble. Most algorithms mostly cancel themselves out so only a small, predictable
+    set of pieces changes. Example: the "sexy move" <code>R U R' U'</code> has <strong>order 6</strong>
+    — repeat it six times and a solved cube returns to solved.</dd>
+
+    <dt>God's Number <span class="tag">theory</span></dt>
+    <dd><strong>20</strong> — the proven maximum number of face turns needed to solve <em>any</em>
+    of the cube's ~43 quintillion positions (half-turn metric). The theoretical "quickest worst
+    case." Humans don't solve optimally; we use memorable <em>methods</em> instead.
+    <em>(cube20.org)</em></dd>
+  </dl>
+
+  <p class="note">Reference doc · grows each lesson · <code>teach-rubiks-cube/reference/glossary.html</code></p>
+</div>
+</body>
+</html>

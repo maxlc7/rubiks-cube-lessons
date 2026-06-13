@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rubik's Cube — Lessons</title>
+<style>
+  :root{--ink:#1a1a1a;--paper:#fbfaf7;--line:#e4e0d8;--accent:#c0392b;--blue:#2d6cdf;--green:#2e8b57;--muted:#6b6b6b;--card:#fff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:680px;margin:0 auto;padding:56px 22px 90px;}
+  .kicker{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 10px;}
+  h1{font-size:2.5rem;line-height:1.1;margin:0 0 8px;}
+  .sub{font-size:1.12rem;color:var(--muted);font-style:italic;margin:0 0 8px;}
+  .mission{font-size:.96rem;color:#444;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:14px 18px;margin:22px 0 34px;}
+  h2{font-size:.8rem;font-family:ui-monospace,Menlo,monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:34px 0 10px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:12px 0;transition:transform .12s,box-shadow .12s,border-color .12s;}
+  a.card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07);border-color:#cdddf5;}
+  .n{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;}
+  .t{font-size:1.25rem;font-weight:700;margin:3px 0 4px;}
+  .d{font-size:.95rem;color:var(--muted);margin:0;}
+  .done{display:inline-block;background:var(--green);color:#fff;font-size:.64rem;font-family:ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle;}
+  .now{background:var(--accent);}
+  .glossary{border-style:dashed;}
+  .foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">A guided course · built one lesson at a time</p>
+  <h1>Solving the Rubik's Cube 🧊</h1>
+  <p class="sub">Cube literacy — reading the cube and understanding <em>why</em> each move works, not chanting algorithms.</p>
+  <div class="mission">The goal: pick up any scrambled cube, read its state in terms of <b>pieces</b> (not stickers),
+  solve it start to finish unaided, and explain what each stage accomplishes and why.</div>
+
+  <h2>Lessons</h2>
+
+  <a class="card" href="lessons/0004-white-corners.html">
+    <div class="n">Lesson 4 · Stage 2</div>
+    <div class="t">The White Corners <span class="done">done</span></div>
+    <p class="d">Finish the first layer and meet your first real algorithm — <code>R U R' U'</code>, the move you discovered with your own hands.</p>
+  </a>
+
+  <a class="card" href="lessons/0005-matched-cross.html">
+    <div class="t">The Matched Cross <span class="done">done</span></div>
+    <div class="n">Lesson 5 · Stage 1 fix</div>
+    <p class="d">A "white cross" isn't done until the second colors match. The foolproof daisy method, with interactive practice.</p>
+  </a>
+
+  <a class="card" href="lessons/0006-middle-layer.html">
+    <div class="n">Lesson 6 · Stage 3</div>
+    <div class="t">The Middle Layer <span class="done now">you are here</span></div>
+    <p class="d">Fill the belt around the middle with one insert algorithm and its mirror image. Tap-to-check direction practice.</p>
+  </a>
+
+  <h2>Reference</h2>
+  <a class="card glossary" href="reference/glossary.html">
+    <div class="t">📖 Glossary</div>
+    <p class="d">The canonical vocabulary for the course — piece, edge, corner, permutation vs orientation, notation, daisy, God's Number.</p>
+  </a>
+
+  <div class="foot">More lessons appear here as we go. Bookmark this page on your phone.</div>
+</div>
+</body>
+</html>

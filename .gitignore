@@ -1,0 +1,13 @@
+# Private learning state — kept local, not published
+MISSION.md
+NOTES.md
+RESOURCES.md
+learning-records/
+
+# Early lessons (course published from Lesson 4 onward)
+lessons/0001-*.html
+lessons/0002-*.html
+lessons/0003-*.html
+
+# OS cruft
+.DS_Store

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 5 — The Matched Cross (fixing the second colors)</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+    /* cube colors */
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#d9d6cf;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;}
+  h1{font-size:2.4rem; line-height:1.12; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;} .mv.x2{background:#1f7a4d;}
+  .algo{text-align:center; margin:18px 0;}
+  .algo .mv{font-size:1.15rem; padding:6px 14px; margin:0 3px;}
+  .mission{background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;}
+  .mission strong{color:var(--amber);}
+  .big-idea{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.3rem; line-height:1.4; margin:0; font-weight:600;}
+  .callback{background:#eef3fb; border:1px solid #cdddf5; border-left:4px solid var(--blue);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .callback strong{color:#1f4fa8;}
+  .flip{background:#fdf3f2; border:1px solid #f0cfc9; border-left:4px solid var(--accent);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .flip strong{color:var(--accent);}
+  .key{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .key strong{color:#5b3fb0;}
+  .hands{background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px; padding:18px 22px; margin:22px 0;}
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ ";}
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; background:#faf9f6;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;}
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .ceiling strong{color:#5b3fb0;}
+  .ask{margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;}
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  /* ---- cube diagrams ---- */
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);}
+  .x{background:var(--c-gray); box-shadow:none; border-style:dashed;}
+  .face{display:inline-grid; grid-template-columns:repeat(3,34px); gap:5px; padding:8px;
+    background:#2b2b2b; border-radius:10px;}
+  .diagram{display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start; justify-content:center;
+    margin:8px 0 4px;}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:6px 0 0; font-style:italic;}
+  .dwrap{margin:22px 0;}
+  /* band: 4 side faces unfolded, center over edge */
+  .band{display:inline-grid; grid-template-columns:repeat(4,46px); gap:10px;
+    padding:12px 14px; background:#2b2b2b; border-radius:12px;}
+  .col{display:grid; grid-template-rows:repeat(2,46px); gap:6px; position:relative;}
+  .col .cell{width:46px; height:46px;}
+  .col .mark{position:absolute; right:-4px; top:-10px; font-size:15px; font-weight:700;
+    width:20px; height:20px; line-height:20px; text-align:center; border-radius:50%;}
+  .col .mark.ok{background:var(--green); color:#fff;}
+  .col .mark.no{background:var(--accent); color:#fff;}
+  .bandlbl{display:grid; grid-template-columns:repeat(4,46px); gap:10px; padding:0 14px; margin-top:6px;}
+  .bandlbl span{font-size:.62rem; font-family:ui-monospace,monospace; color:var(--muted); text-align:center;}
+  .legend{font-size:.8rem; color:var(--muted); text-align:center; margin-top:6px;}
+
+  /* interactive matcher */
+  .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .lab h3{margin-top:0;} .lab h3::before{content:"🔬 ";}
+  .cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin:14px 0 4px;}
+  .mcard{background:#faf9f6; border:1px solid var(--line); border-radius:12px; padding:14px; width:170px; text-align:center;}
+  .stack{display:inline-grid; grid-template-rows:repeat(2,40px); gap:6px; padding:8px; background:#2b2b2b; border-radius:10px;}
+  .stack .cell{width:40px; height:40px;}
+  .mcard .ctxt{font-size:.78rem; color:var(--muted); margin:8px 0 10px; min-height:2.4em;}
+  .mbtns{display:flex; gap:8px; justify-content:center;}
+  .mbtn{flex:1; cursor:pointer; font:inherit; font-size:.86rem; padding:7px 4px; border-radius:8px;
+    border:1px solid var(--line); background:#fff; transition:.15s;}
+  .mbtn:hover{background:#f1eee8;}
+  .mbtn.gd{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .mbtn.bd{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .mfb{font-size:.8rem; margin-top:9px; min-height:1.2em; font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 5</p>
+  <h1>The Matched Cross</h1>
+  <p class="sub">Your white cross is real — but the second colors don't match yet. Today you fix that, foolproof, and learn the one idea you were missing.</p>
+
+  <p class="recall"><b>Where you are:</b> you've got a white cross — four white edges making a <b>+</b> on the
+  white face. But you noticed the <em>other</em> color on each edge doesn't line up with the center next to it.
+  Spotting that is the whole skill. Let's make it a <b>true</b> cross.</p>
+
+  <div class="mission">
+    <strong>Why this lesson?</strong> A white cross where the side colors are wrong is a <em>fake</em> cross —
+    it looks done but it's built crooked, and every later stage (corners, middle layer) will sit on top of that
+    mistake. Five minutes now saves the whole solve. And the fix teaches the single most important habit on the
+    cube: <em>a piece is only home when ALL its colors are right.</em>
+  </div>
+
+  <div class="callback">
+    <strong>This is "pieces, not stickers" coming back to bite — in a good way.</strong> Back in Lesson 1 you
+    learned an edge has <b>two</b> colors and one true home. A white edge isn't done just because its white
+    sticker landed on the white face. Its <em>second</em> color has to meet its matching center. You felt that
+    something was off — that instinct <em>is</em> cube literacy.
+  </div>
+
+  <h2>See the difference</h2>
+  <p>Here's the cube's middle "band" — the four side faces unfolded into a row. Top row = the <b>centers</b>
+  (fixed colors, the true identity of each face). Bottom row = the <b>side color of each cross edge</b> sitting
+  under it. A column that's <em>two of the same color</em> is matched. </p>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div>
+        <div class="band">
+          <div class="col"><span class="cell r"></span><span class="cell g"></span><span class="mark no">✗</span></div>
+          <div class="col"><span class="cell g"></span><span class="cell o"></span><span class="mark no">✗</span></div>
+          <div class="col"><span class="cell o"></span><span class="cell b"></span><span class="mark no">✗</span></div>
+          <div class="col"><span class="cell b"></span><span class="cell r"></span><span class="mark no">✗</span></div>
+        </div>
+        <div class="bandlbl"><span>center</span><span>center</span><span>center</span><span>center</span></div>
+        <p class="dcap">A <b>fake</b> cross — white is down, but every edge's side color sits on the wrong face.</p>
+      </div>
+    </div>
+    <div class="diagram">
+      <div>
+        <div class="band">
+          <div class="col"><span class="cell r"></span><span class="cell r"></span><span class="mark ok">✓</span></div>
+          <div class="col"><span class="cell g"></span><span class="cell g"></span><span class="mark ok">✓</span></div>
+          <div class="col"><span class="cell o"></span><span class="cell o"></span><span class="mark ok">✓</span></div>
+          <div class="col"><span class="cell b"></span><span class="cell b"></span><span class="mark ok">✓</span></div>
+        </div>
+        <div class="bandlbl"><span>center</span><span>center</span><span>center</span><span>center</span></div>
+        <p class="dcap">A <b>true matched cross</b> — every edge's second color meets its own center. This is the goal.</p>
+      </div>
+    </div>
+    <p class="legend">Each cross edge belongs under the center of its <em>own</em> color — red edge under the red center, green under green, and so on.</p>
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>Line up an edge's side color with its matching center <em>first</em> — then bring it straight down. The
+    color was right before it dropped, so it stays right after.</p>
+  </div>
+
+  <p>That "<b>match first, drop second</b>" order is the step that was missing. If you bring an edge down to the
+  white face <em>before</em> checking its side color, you're just hoping it lands matched — and usually it
+  doesn't. We're going to do it in the order that <em>can't</em> go wrong.</p>
+
+  <h2>The foolproof tool: the Daisy 🌼</h2>
+
+  <div class="flip">
+    <strong>Set up:</strong> hold the cube with <b>yellow center on top, white on the bottom</b> — same
+    orientation as Lesson 4. We'll stage the edges on the open top, match them, then drop them onto the white
+    bottom.<sup><a href="#r1">1</a></sup>
+  </div>
+
+  <p>A <b>daisy</b> is four white edges arranged around the yellow center on top — white stickers pointing up,
+  like petals around a flower. At this stage you <em>ignore</em> the side colors completely; you just gather the
+  white edges up top.</p>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div>
+        <div class="face">
+          <span class="cell x"></span><span class="cell w"></span><span class="cell x"></span>
+          <span class="cell w"></span><span class="cell y"></span><span class="cell w"></span>
+          <span class="cell x"></span><span class="cell w"></span><span class="cell x"></span>
+        </div>
+        <p class="dcap">The daisy — looking down at the <b>top</b> face. Yellow center, four white "petals."</p>
+      </div>
+    </div>
+  </div>
+
+  <p>To build the daisy, just hunt down the four white edges (wherever they're hiding) and turn faces until each
+  one sits as a white petal on top. Already have a white cross on the bottom? Then you're <em>almost</em> there —
+  for each bottom edge, turn its side face <span class="mv x2">180°</span> to lift it up into a petal, and now you
+  can re-place it the right way. (Don't worry about wrecking the cross — we're rebuilding it correctly.)</p>
+
+  <h3>Now drop each petal — matched</h3>
+  <p>One petal at a time:</p>
+  <ol class="steps" style="margin-bottom:0;">
+    <li>Pick a petal and look at its <b>side color</b> (the sticker on the side face, not the white on top).</li>
+    <li>Turn just the <b>top</b> layer (<span class="mv">U</span>) until that side color sits on the <em>same
+      face as its matching center</em> — e.g. a petal with a <span style="color:var(--c-red)"><b>red</b></span>
+      side goes directly above the <span style="color:var(--c-red)"><b>red</b></span> center.</li>
+    <li>Now spin that whole face <b>180°</b> (e.g. <span class="mv x2">F2</span>) to swing the edge straight down
+      to the white bottom. White lands on the bottom; the side color — already matched — stays matched.</li>
+    <li>Repeat for the other three petals. Each edge goes to a <em>different</em> face, so you never re-turn a
+      face you've already finished — placed edges stay put.</li>
+  </ol>
+
+  <div class="key">
+    <strong>Why this can't collide.</strong> The four cross edges each live on a different side
+    (<span class="mv x2">F2</span>, <span class="mv x2">R2</span>, <span class="mv x2">B2</span>,
+    <span class="mv x2">L2</span> — one per edge). Turning the top to aim the <em>next</em> petal never touches an
+    edge already sitting on the bottom. And a <b>180°</b> face turn drops the new edge in without flipping it. So
+    once an edge is matched-and-dropped, it's locked — guaranteed. That's the difference between hoping and
+    knowing.
+  </div>
+
+  <div class="lab">
+    <h3>Practice: matched or not? <span class="win">tap to check</span></h3>
+    <p style="margin-top:0; font-size:.94rem;">Each card shows a <b>center</b> (top) over a cross edge's
+    <b>side color</b> (bottom). Decide if that edge is correctly matched, then tap. Instant feedback.</p>
+    <div class="cards">
+      <div class="mcard" data-ok="no">
+        <div class="stack"><span class="cell g"></span><span class="cell r"></span></div>
+        <div class="ctxt">Green center, red edge below it.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Matched ✓</button><button class="mbtn" data-v="no">Not matched ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="yes">
+        <div class="stack"><span class="cell b"></span><span class="cell b"></span></div>
+        <div class="ctxt">Blue center, blue edge below it.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Matched ✓</button><button class="mbtn" data-v="no">Not matched ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="no">
+        <div class="stack"><span class="cell o"></span><span class="cell w"></span></div>
+        <div class="ctxt">Orange center — but the white sticker is facing out the side. What does that tell you?</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Matched ✓</button><button class="mbtn" data-v="no">Not matched ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: rebuild it as a matched cross <span class="win">~5 min · true cross DONE</span></h3>
+    <ol class="steps">
+      <li><b>Yellow on top, white on bottom.</b></li>
+      <li><b>Make the daisy</b> — get all four white edges as petals around the yellow center, ignoring side colors for now.</li>
+      <li><b>Drop them matched, one by one:</b> look at a petal's side color → <span class="mv">U</span> until it's
+        above its same-color center → that face <span class="mv x2">180°</span> down.</li>
+      <li><b>Check your band.</b> Walk around the cube. Every side should show its center color continuing straight
+        down into the cross edge — four matched columns, like the green diagram above.</li>
+      <li><b>True cross complete.</b> White + on the bottom, and all four side colors matched. Now the foundation
+        is square.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just locked in:</b> the habit that runs the entire rest of the solve —
+    <em>match the colors first, commit the piece second.</em></p>
+  </div>
+
+  <div class="snag">
+    <h4>Snag — a white edge has its white sticker on the SIDE, not on top</h4>
+    <p style="margin:0;">That edge is "flipped." Don't force it down — you'd get white pointing sideways (card 3
+    above). Park it up in the top layer first so its white faces <em>up</em> as a proper petal, then match-and-drop
+    it. If it's stuck on the bottom flipped, lift it with a <span class="mv x2">180°</span> of its side face and
+    re-place it as a petal.</p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>Understand the fix 🧠</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. What makes a white cross a <em>true</em> cross, not a fake one?</div>
+      <button class="opt" data-k="a">All four white stickers form a + on the white face</button>
+      <button class="opt" data-k="b">Each edge's second color also matches the center next to it</button>
+      <button class="opt" data-k="c">The cross is on the bottom instead of the top</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. In the daisy method, why do we match the side color <em>before</em> dropping the edge?</div>
+      <button class="opt" data-k="a">It looks nicer while you work</button>
+      <button class="opt" data-k="b">So the white sticker ends up on the side</button>
+      <button class="opt" data-k="c">Because if it's matched before a 180° drop, it stays matched after — no luck involved</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. Why doesn't placing the 2nd, 3rd, and 4th edges knock out the ones already done?</div>
+      <button class="opt" data-k="a">Each edge belongs to a different face, so you never turn a finished face again — and top turns don't touch bottom edges</button>
+      <button class="opt" data-k="b">The first edge gets glued in place</button>
+      <button class="opt" data-k="c">You solve them all in one single move</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Where this is heading.</strong> With a <em>true</em> matched cross, your foundation is finally square —
+    and Lesson 4's white corners will actually seat correctly on top of it. So your path is: finish this matched
+    cross → go back to <b>Lesson 4 (the white corners)</b> and complete the first layer → then I build
+    <b>Lesson 6: the middle layer</b>. You're one solid cross away from real momentum.
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Stuck on a specific edge? Tell me its two colors and
+    where it is and I'll give you the exact turns. Not sure which center an edge should match? Send a photo of the
+    cube and I'll read it with you. When all four side colors line up — tell me <kbd>cross matched</kbd> and we'll
+    jump straight back to the corners.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Daisy method, matched white cross, and the "match the edge to the center before bringing it down"
+      principle — <a href="https://www.jperm.net/3x3">J Perm, How To Solve The 3×3</a>, Step 1 (the cross).</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 5 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  // multiple-choice quiz
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {ok:"✓ Exactly. You get the why, not just the steps.", no:"Not quite — re-read the section above and try again."};
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){btn.classList.add('correct'); fb.textContent=msgs.ok; fb.className='fb show ok';}
+        else{btn.classList.add('wrong'); q.querySelector('[data-k="'+correct+'"]').classList.add('correct'); fb.textContent=msgs.no; fb.className='fb show no';}
+      });
+    });
+  });
+
+  // interactive "matched or not?" cards
+  document.querySelectorAll('.mcard').forEach(function(card){
+    var ok = card.getAttribute('data-ok'); // "yes" = matched
+    var fb = card.querySelector('.mfb');
+    var notes = {
+      yesyes:"✓ Right — same color top and bottom, that edge is home.",
+      nono:"✓ Right — different colors means it's in the wrong seat.",
+      whiteno:"✓ Sharp — white on the side means the edge is flipped, never matched. Re-petal it first.",
+      wrong_yes:"✗ Look again — the two colors are different, so it's not matched.",
+      wrong_no:"✗ Look again — top and bottom are the same color, that one IS matched."
+    };
+    card.querySelectorAll('.mbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.getAttribute('data-v');
+        card.querySelectorAll('.mbtn').forEach(function(b){b.classList.remove('gd','bd');});
+        var right = (v === ok);
+        btn.classList.add(right ? 'gd' : 'bd');
+        if(right){
+          if(ok === 'yes') fb.textContent = notes.yesyes;
+          else fb.textContent = card.querySelector('.cell.w') ? notes.whiteno : notes.nono;
+          fb.style.color = '#1d6b3c';
+        } else {
+          fb.textContent = (v === 'yes') ? notes.wrong_yes : notes.wrong_no;
+          fb.style.color = '#9a2b1e';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
