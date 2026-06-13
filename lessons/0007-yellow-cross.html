@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 7 — The Yellow Cross (read the case, then act)</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#cfccc4;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;}
+  h1{font-size:2.4rem; line-height:1.12; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;} .mv.x2{background:#1f7a4d;}
+  .algo{text-align:center; margin:18px 0;}
+  .algo .mv{font-size:1.15rem; padding:6px 14px; margin:0 3px;}
+  .algobox{background:#1a1a1a; border-radius:12px; padding:20px 16px; margin:14px 0; text-align:center;}
+  .algobox .nm{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:#ffd400; margin-bottom:12px;}
+  .algobox .algo{margin:0;}
+  .mission{background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;}
+  .mission strong{color:var(--amber);}
+  .big-idea{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.3rem; line-height:1.4; margin:0; font-weight:600;}
+  .callback{background:#eef3fb; border:1px solid #cdddf5; border-left:4px solid var(--blue);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .callback strong{color:#1f4fa8;}
+  .key{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .key strong{color:#5b3fb0;}
+  .hands{background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px; padding:18px 22px; margin:22px 0;}
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ ";}
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; background:#faf9f6;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;}
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .ceiling strong{color:#5b3fb0;}
+  .ask{margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;}
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  /* top-face case diagrams */
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .y{background:var(--c-yellow);} .x{background:var(--c-gray);}
+  .face{display:inline-grid; grid-template-columns:repeat(3,34px); gap:5px; padding:8px;
+    background:#2b2b2b; border-radius:10px;}
+  .diagram{display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start; justify-content:center; margin:8px 0 4px;}
+  .case{text-align:center;}
+  .case .nm{font-family:ui-monospace,monospace; font-size:.74rem; letter-spacing:.06em; color:var(--muted); margin-top:8px;}
+  .case .nm b{color:var(--ink);}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:10px 0 0; font-style:italic;}
+  .flow{display:flex; align-items:center; gap:14px; justify-content:center; flex-wrap:wrap; margin:14px 0;}
+  .flow .arrow{font-size:1.6rem; color:var(--accent);}
+
+  /* interactive */
+  .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .lab h3{margin-top:0;} .lab h3::before{content:"🔎 ";}
+  .cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin:14px 0 4px;}
+  .mcard{background:#faf9f6; border:1px solid var(--line); border-radius:12px; padding:16px 14px; width:180px; text-align:center;}
+  .mcard .face{margin-bottom:10px;}
+  .mbtns{display:flex; gap:6px; justify-content:center; flex-wrap:wrap;}
+  .mbtn{cursor:pointer; font:inherit; font-size:.82rem; padding:6px 10px; border-radius:8px;
+    border:1px solid var(--line); background:#fff; transition:.15s;}
+  .mbtn:hover{background:#f1eee8;}
+  .mbtn.gd{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .mbtn.bd{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .mfb{font-size:.8rem; margin-top:9px; min-height:1.2em; font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 7</p>
+  <h1>The Yellow Cross</h1>
+  <p class="sub">Two layers done. Now the last layer begins — and for the first time, you <em>read the case</em> before you act.</p>
+
+  <p class="recall"><b>Where you are:</b> white face solved, both lower layers solid, and only the yellow top remains
+  with its four yellow edges scattered. Keep <b>white down, yellow up</b> and don't flip the cube again.</p>
+
+  <div class="mission">
+    <strong>Why this lesson?</strong> The last layer is the heart of the mission — <em>cube literacy</em>. You
+    stop following a fixed recipe and start <em>diagnosing</em>: you look at the top, recognize which of a few
+    known shapes you're in, set it up, and fire the matching algorithm. This is the first true "read, then act"
+    skill. We start with the easiest read: the yellow cross.
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>Right now you only care about the four yellow <em>edges</em> — getting yellow to face up so they form a
+    <b>+</b> on top. Ignore the corners and ignore the side colors. One algorithm, applied to the right shape,
+    does it.</p>
+  </div>
+
+  <div class="callback">
+    <strong>This is the white cross again — upside down and one rule simpler.</strong> Same shape (a +), but here
+    you only need yellow facing <em>up</em>; you do <b>not</b> match the side colors yet (that's a later "permute"
+    step). It's pure <em>orientation</em> work — the place-vs-facing split from Lesson 1, now center stage.
+  </div>
+
+  <h2>Read the case: Dot, L, or Line</h2>
+  <p>Look straight down at the yellow top. Count only the <b>edges</b> (the 4 middle-of-a-side stickers, not the
+  corners). You'll be in exactly one of these:<sup><a href="#r1">1</a></sup></p>
+
+  <div class="diagram">
+    <div class="case">
+      <div class="face">
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        <span class="cell x"></span><span class="cell y"></span><span class="cell x"></span>
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+      </div>
+      <div class="nm"><b>DOT</b> · no yellow edges</div>
+    </div>
+    <div class="case">
+      <div class="face">
+        <span class="cell x"></span><span class="cell y"></span><span class="cell x"></span>
+        <span class="cell y"></span><span class="cell y"></span><span class="cell x"></span>
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+      </div>
+      <div class="nm"><b>L</b> (hook) · two <em>adjacent</em></div>
+    </div>
+    <div class="case">
+      <div class="face">
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+      </div>
+      <div class="nm"><b>LINE</b> · two <em>opposite</em></div>
+    </div>
+    <div class="case">
+      <div class="face">
+        <span class="cell x"></span><span class="cell y"></span><span class="cell x"></span>
+        <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+        <span class="cell x"></span><span class="cell y"></span><span class="cell x"></span>
+      </div>
+      <div class="nm"><b>CROSS</b> · done ✓</div>
+    </div>
+  </div>
+  <p class="dcap">Gray = not-yet-yellow. The center is always yellow, so it never counts toward the read.</p>
+
+  <h2>The one algorithm</h2>
+  <p>The same sequence handles all three cases — you just hold the cube the right way first:<sup><a href="#r1">1</a></sup></p>
+  <div class="algobox">
+    <div class="nm">The cross-maker</div>
+    <div class="algo">
+      <span class="mv">F</span> <span class="mv">R</span> <span class="mv">U</span>
+      <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> <span class="mv p">F&#39;</span>
+    </div>
+  </div>
+
+  <h3>How to hold each case, then fire</h3>
+  <div class="flow">
+    <div class="case">
+      <div class="face">
+        <span class="cell x"></span><span class="cell y"></span><span class="cell x"></span>
+        <span class="cell y"></span><span class="cell y"></span><span class="cell x"></span>
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+      </div>
+      <div class="nm"><b>L</b>: point the two yellow edges<br>to the <b>back &amp; left</b> (top-left)</div>
+    </div>
+    <span class="arrow">→</span>
+    <div class="case">
+      <div class="face">
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+        <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+      </div>
+      <div class="nm"><b>LINE</b>: lay it <b>flat left-to-right</b><br>(horizontal)</div>
+    </div>
+  </div>
+  <ul style="font-size:.96rem;">
+    <li><b>Dot</b> (only the center): just run <span class="mv">F</span><span class="mv">R</span><span class="mv">U</span><span class="mv p">R&#39;</span><span class="mv p">U&#39;</span><span class="mv p">F&#39;</span> once. It turns the dot into an L or a Line. Then re-read and go again.</li>
+    <li><b>L / hook</b>: rotate the whole top (or the cube) so the two yellow edges point to the <b>top-left</b> (one toward the back, one toward the left), then run it once → cross.</li>
+    <li><b>Line</b>: turn it so it lies <b>horizontal</b> (left-to-right), then run it once → cross.</li>
+  </ul>
+  <p>So the worst case is just: <b>dot → (run) → L or line → (re-hold, run) → cross.</b> Two or three goes, max.</p>
+
+  <div class="key">
+    <strong>Why it works — and yes, the sexy move is hiding in it.</strong> Look:
+    <span class="mv">F</span> ( <span class="mv">R</span> <span class="mv">U</span> <span class="mv p">R&#39;</span>
+    <span class="mv p">U&#39;</span> ) <span class="mv p">F&#39;</span> — that's <span class="mv">R U R' U'</span> wrapped in
+    an <span class="mv">F</span> … <span class="mv p">F'</span>. The <span class="mv">F</span> tips the top-front
+    edges down onto the front; the sexy move shuffles them; <span class="mv p">F'</span> tips them back up. The round
+    trip <em>flips</em> the orientation of the edges it grabbed — yellow now faces up — without dragging them out of
+    place. Pure orientation, no permutation. And because it's a last-layer algorithm, your two solved layers below
+    don't move.<sup><a href="#r1">1</a></sup>
+  </div>
+
+  <div class="lab">
+    <h3>Practice: name the case <span class="win">tap to check</span></h3>
+    <p style="margin-top:0; font-size:.94rem;">Look at the yellow edges (ignore the gray corners and the always-yellow center). Which case is it?</p>
+    <div class="cards">
+      <div class="mcard" data-ok="line">
+        <div class="face">
+          <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+          <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+          <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        </div>
+        <div class="mbtns"><button class="mbtn" data-v="dot">Dot</button><button class="mbtn" data-v="l">L</button><button class="mbtn" data-v="line">Line</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="l">
+        <div class="face">
+          <span class="cell x"></span><span class="cell y"></span><span class="cell x"></span>
+          <span class="cell x"></span><span class="cell y"></span><span class="cell y"></span>
+          <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        </div>
+        <div class="mbtns"><button class="mbtn" data-v="dot">Dot</button><button class="mbtn" data-v="l">L</button><button class="mbtn" data-v="line">Line</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="dot">
+        <div class="face">
+          <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+          <span class="cell x"></span><span class="cell y"></span><span class="cell x"></span>
+          <span class="cell x"></span><span class="cell x"></span><span class="cell x"></span>
+        </div>
+        <div class="mbtns"><button class="mbtn" data-v="dot">Dot</button><button class="mbtn" data-v="l">L</button><button class="mbtn" data-v="line">Line</button></div>
+        <div class="mfb"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: make the yellow cross <span class="win">~5 min · last layer begins</span></h3>
+    <ol class="steps">
+      <li><b>White down, yellow up.</b> Look straight at the top and read your case: dot, L, or line.</li>
+      <li><b>Set it up</b> — L to the top-left, line horizontal. (Dot needs no setup.)</li>
+      <li><b>Run</b> <span class="mv">F</span> <span class="mv">R</span> <span class="mv">U</span>
+        <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> <span class="mv p">F&#39;</span> once.</li>
+      <li><b>Re-read.</b> Not a full cross yet? Identify the new case, re-hold, run again. Repeat to the cross.</li>
+      <li><b>Yellow + on top.</b> Don't worry that the yellow edges' side colors don't match yet — we line those
+        up in the next stage. Right now, the goal is just the yellow plus sign.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just learned:</b> the core last-layer loop — <em>read the shape, set
+    it up, fire the algorithm, re-read.</em> Every remaining stage works exactly like this.</p>
+  </div>
+
+  <div class="snag">
+    <h4>Snag — I ran it and it looks messier, not better</h4>
+    <p style="margin:0;">That's usually a <b>setup</b> miss, not a wrong algorithm. The L must point to the
+    top-left and the Line must be horizontal <em>before</em> you start. If you fired from the wrong angle, just
+    re-read your current case, re-hold it correctly, and run again — it always converges to the cross. The two
+    layers underneath are safe; this algorithm puts them back every time.</p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>Read the last layer 🧠</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. At the yellow-cross stage, what are you trying to do?</div>
+      <button class="opt" data-k="a">Match the yellow edges' side colors to the centers</button>
+      <button class="opt" data-k="b">Just get yellow facing up on all four edges (a yellow +), ignoring side colors</button>
+      <button class="opt" data-k="c">Solve the yellow corners</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. You have the LINE case. How do you hold it before the algorithm?</div>
+      <button class="opt" data-k="a">Vertical (pointing toward and away from you)</button>
+      <button class="opt" data-k="b">It doesn't matter</button>
+      <button class="opt" data-k="c">Horizontal, lying left-to-right</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. Why doesn't this algorithm wreck your two finished layers?</div>
+      <button class="opt" data-k="a">It's a last-layer algorithm — what F tips down, F' tips back, so the layers below return intact</button>
+      <button class="opt" data-k="b">The bottom layers are locked once solved</button>
+      <button class="opt" data-k="c">You're only allowed to turn the top</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Where this is heading.</strong> Yellow cross done = last-layer <em>edges oriented</em>. Three reads
+    remain, each the same loop: <b>orient the yellow corners</b> (get the whole top face yellow), then
+    <b>position the corners</b>, then <b>position the edges</b> — and the cube is solved. You're on the final
+    stretch. Next up, <b>Lesson 8: a fully yellow top.</b>
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Can't tell if you're an L or a line? Tell me which edges
+    are yellow (e.g. "top and right edges"), or where the yellow ones point, and I'll name the case and tell you
+    exactly how to hold it. When you've got a yellow + on top, tell me <kbd>yellow cross</kbd> and I'll build the
+    next stage.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Last-layer edge orientation, the Dot/L/Line cases, and the algorithm <code>F R U R' U' F'</code>
+      with setup — <a href="https://www.jperm.net/3x3">J Perm, How To Solve The 3×3</a>, Step 4 (yellow cross).</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 7 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {ok:"✓ Exactly. You're reading the cube, not just chanting.", no:"Not quite — re-read the section above and try again."};
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){btn.classList.add('correct'); fb.textContent=msgs.ok; fb.className='fb show ok';}
+        else{btn.classList.add('wrong'); q.querySelector('[data-k="'+correct+'"]').classList.add('correct'); fb.textContent=msgs.no; fb.className='fb show no';}
+      });
+    });
+  });
+
+  document.querySelectorAll('.mcard').forEach(function(card){
+    var ok = card.getAttribute('data-ok');
+    var fb = card.querySelector('.mfb');
+    var notes = {
+      dot:"✓ Dot — no yellow edges. Just run the algorithm once to break out of it.",
+      l:"✓ L (hook) — two adjacent edges. Point them top-left, then fire.",
+      line:"✓ Line — two opposite edges. Lay it horizontal, then fire.",
+      wrong:"✗ Look again — count only the EDGE stickers (the middles of each side), not corners."
+    };
+    card.querySelectorAll('.mbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.getAttribute('data-v');
+        card.querySelectorAll('.mbtn').forEach(function(b){b.classList.remove('gd','bd');});
+        var right = (v === ok);
+        btn.classList.add(right ? 'gd' : 'bd');
+        fb.textContent = right ? notes[ok] : notes.wrong;
+        fb.style.color = right ? '#1d6b3c' : '#9a2b1e';
+      });
+    });
+  });
+</script>
+</body>
+</html>
