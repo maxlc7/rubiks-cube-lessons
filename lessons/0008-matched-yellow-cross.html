@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 8 — The Matched Yellow Cross (sliding edges with a 3-cycle)</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#cfccc4;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;}
+  h1{font-size:2.4rem; line-height:1.12; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;} .mv.x2{background:#1f7a4d;}
+  .algo{text-align:center; margin:8px 0;}
+  .algo .mv{font-size:1.08rem; padding:6px 12px; margin:2px;}
+  .algobox{background:#1a1a1a; border-radius:12px; padding:20px 16px; margin:14px 0; text-align:center;}
+  .algobox .nm{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:#ffd400; margin-bottom:12px;}
+  .algobox .chunks{font-family:ui-monospace,monospace; color:#cbb3ff; font-size:.74rem; letter-spacing:.05em; margin-top:12px;}
+  .mission{background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;}
+  .mission strong{color:var(--amber);}
+  .big-idea{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.3rem; line-height:1.4; margin:0; font-weight:600;}
+  .callback{background:#eef3fb; border:1px solid #cdddf5; border-left:4px solid var(--blue);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .callback strong{color:#1f4fa8;}
+  .key{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .key strong{color:#5b3fb0;}
+  .hands{background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px; padding:18px 22px; margin:22px 0;}
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ ";}
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; background:#faf9f6;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;}
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .ceiling strong{color:#5b3fb0;}
+  .ask{margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;}
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);} .x{background:var(--c-gray);}
+  .diagram{display:flex; gap:30px; flex-wrap:wrap; align-items:center; justify-content:center; margin:8px 0 4px;}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
+  .dwrap{margin:22px 0;}
+  /* matched band (top view, center over edge) */
+  .band{display:inline-grid; grid-template-columns:repeat(4,46px); gap:10px; padding:12px 14px; background:#2b2b2b; border-radius:12px;}
+  .col{display:grid; grid-template-rows:repeat(2,46px); gap:6px; position:relative;}
+  .col .cell{width:46px; height:46px;}
+  .col .mark{position:absolute; right:-4px; top:-10px; font-size:15px; font-weight:700; width:20px; height:20px; line-height:20px; text-align:center; border-radius:50%;}
+  .col .mark.ok{background:var(--green); color:#fff;} .col .mark.no{background:var(--accent); color:#fff;}
+  /* 3-cycle top view */
+  .cyc{position:relative; display:inline-grid; grid-template-columns:repeat(3,40px); gap:5px; padding:12px; background:#2b2b2b; border-radius:12px;}
+  .cyc .cell{width:40px; height:40px;}
+  .cyc .tag{position:absolute; font-size:.62rem; font-family:ui-monospace,monospace; color:#fff; font-weight:700;}
+  .pin{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace; padding:2px 7px; border-radius:20px;}
+
+  .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .lab h3{margin-top:0;} .lab h3::before{content:"🔬 ";}
+  .cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin:14px 0 4px;}
+  .mcard{background:#faf9f6; border:1px solid var(--line); border-radius:12px; padding:14px; width:170px; text-align:center;}
+  .stack{display:inline-grid; grid-template-rows:repeat(2,40px); gap:6px; padding:8px; background:#2b2b2b; border-radius:10px;}
+  .stack .cell{width:40px; height:40px;}
+  .mcard .ctxt{font-size:.78rem; color:var(--muted); margin:8px 0 10px; min-height:2.4em;}
+  .mbtns{display:flex; gap:8px; justify-content:center;}
+  .mbtn{flex:1; cursor:pointer; font:inherit; font-size:.86rem; padding:7px 4px; border-radius:8px; border:1px solid var(--line); background:#fff; transition:.15s;}
+  .mbtn:hover{background:#f1eee8;}
+  .mbtn.gd{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .mbtn.bd{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .mfb{font-size:.8rem; margin-top:9px; min-height:1.2em; font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 8</p>
+  <h1>The Matched Yellow Cross</h1>
+  <p class="sub">You've seen this exact problem before — on the white cross. Now you solve it one floor up, with a slide.</p>
+
+  <p class="recall"><b>From Lesson 7:</b> you made the yellow cross — all four top edges showing yellow up. But look
+  at their <em>other</em> colors: the side stickers don't line up with the centers yet. Keep white down, yellow up.</p>
+
+  <div class="callback">
+    <strong>Remember Lesson 5?</strong> Your white cross had yellow-up… no — your white cross had white-up but the
+    <em>second colors</em> didn't match the centers. Same situation now, flipped to the top. Back then you could
+    just lift an edge and drop it in. You <b>can't</b> do that here — dropping an edge would smash the two solved
+    layers underneath. So instead of moving one piece, you <em>slide three at once</em> with an algorithm.
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>You can't disturb the layers below, so you rotate three top edges among themselves — a <b>3-cycle</b> — to
+    walk each one to where its side color matches its center. The 4th edge sits safely at the back.</p>
+  </div>
+
+  <h2>See the goal</h2>
+  <p>Same picture as the white cross: each top edge's side color should meet its own center. Mismatched now, matched after.</p>
+  <div class="dwrap">
+    <div class="diagram">
+      <div>
+        <div class="band">
+          <div class="col"><span class="cell r"></span><span class="cell g"></span><span class="mark no">✗</span></div>
+          <div class="col"><span class="cell g"></span><span class="cell o"></span><span class="mark no">✗</span></div>
+          <div class="col"><span class="cell o"></span><span class="cell b"></span><span class="mark no">✗</span></div>
+          <div class="col"><span class="cell b"></span><span class="cell r"></span><span class="mark no">✗</span></div>
+        </div>
+        <div class="dcap">Top edges (bottom row) don't match their centers (top row).</div>
+      </div>
+      <div>
+        <div class="band">
+          <div class="col"><span class="cell r"></span><span class="cell r"></span><span class="mark ok">✓</span></div>
+          <div class="col"><span class="cell g"></span><span class="cell g"></span><span class="mark ok">✓</span></div>
+          <div class="col"><span class="cell o"></span><span class="cell o"></span><span class="mark ok">✓</span></div>
+          <div class="col"><span class="cell b"></span><span class="cell b"></span><span class="mark ok">✓</span></div>
+        </div>
+        <div class="dcap">Matched — the goal. (Yellow stays up the whole time.)</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>The tool: a 3-edge cycle</h2>
+  <p>Hold the cube with a <b>solved edge at the back</b> (more on finding one below). This algorithm cycles the
+  other three edges (front, left, right) around, leaving the back one and both lower layers untouched:<sup><a href="#r1">1</a></sup></p>
+  <div class="algobox">
+    <div class="nm">The edge 3-cycle</div>
+    <div class="algo">
+      <span class="mv">R</span> <span class="mv p">U&#39;</span> <span class="mv">R</span> <span class="mv">U</span>
+      <span class="mv">R</span> <span class="mv">U</span> <span class="mv">R</span> <span class="mv p">U&#39;</span>
+      <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> <span class="mv">R2</span>
+    </div>
+    <div class="chunks">say it in chunks: (R U′) (R U) (R U) (R U′) · R′ U′ R2</div>
+  </div>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div>
+        <div class="cyc">
+          <span class="cell x"></span><span class="cell y" style="opacity:.55"></span><span class="cell x"></span>
+          <span class="cell y" style="opacity:.55"></span><span class="cell y"></span><span class="cell y" style="opacity:.55"></span>
+          <span class="cell x"></span><span class="cell y" style="opacity:.55"></span><span class="cell x"></span>
+        </div>
+        <div class="dcap"><span class="pin">back edge = fixed</span> &nbsp; the other 3 (front / left / right) rotate among themselves</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key">
+    <strong>Why it's safe.</strong> A 3-cycle only shuffles three pieces in a ring and puts everything else back —
+    the back edge, all the corners, and both finished layers don't move. It also doesn't flip any edge, so your
+    yellow stays facing up. Pure <em>permutation</em> (moving), zero <em>orientation</em> change — the cleanest
+    example yet of that Lesson 1 split.<sup><a href="#r1">1</a></sup>
+  </div>
+
+  <h2>How to use it: find a match, park it at the back</h2>
+  <ol class="steps">
+    <li><b>Turn only the top</b> (<span class="mv">U</span>) and watch the four side colors. Stop when at least
+      <em>one</em> edge matches its center (that side now shows a solid block of color top-to-bottom).</li>
+    <li><b>Put that solved edge at the back.</b> Turn the whole cube so the matched side faces away from you.</li>
+    <li><b>Run the 3-cycle.</b> It spins the other three toward their homes.</li>
+    <li><b>Re-check.</b> All four matched? Done. If not, find the solved edge again, park it at the back, and run
+      it once more. Two passes is the most you'll ever need.</li>
+  </ol>
+
+  <div class="lab">
+    <h3>Practice: which edges are matched? <span class="win">tap to check</span></h3>
+    <p style="margin-top:0; font-size:.94rem;">Center on top, the yellow edge's side color below. Matched or not?</p>
+    <div class="cards">
+      <div class="mcard" data-ok="yes">
+        <div class="stack"><span class="cell r"></span><span class="cell r"></span></div>
+        <div class="ctxt">Red center, red side. This is a "solved edge" — park it at the back.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Matched ✓</button><button class="mbtn" data-v="no">Not ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="no">
+        <div class="stack"><span class="cell g"></span><span class="cell o"></span></div>
+        <div class="ctxt">Green center, orange side. Needs to be cycled.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Matched ✓</button><button class="mbtn" data-v="no">Not ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="no">
+        <div class="stack"><span class="cell b"></span><span class="cell g"></span></div>
+        <div class="ctxt">Blue center, green side. Needs to be cycled.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Matched ✓</button><button class="mbtn" data-v="no">Not ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: match the whole cross <span class="win">~5 min</span></h3>
+    <ol class="steps">
+      <li><b>White down, yellow up.</b> Spin the <span class="mv">U</span> layer and find a position where at least one edge matches its center.</li>
+      <li><b>Turn the whole cube</b> so that matched edge is at the <b>back</b>.</li>
+      <li><b>Run</b> <span class="mv">R</span> <span class="mv p">U&#39;</span> <span class="mv">R</span> <span class="mv">U</span> <span class="mv">R</span> <span class="mv">U</span> <span class="mv">R</span> <span class="mv p">U&#39;</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> <span class="mv">R2</span>.</li>
+      <li><b>Re-check and repeat</b> if needed (find the solved edge, back, run again).</li>
+      <li><b>Matched yellow cross.</b> All four sides now show their center color running up into the top edge. The corners are still a mess — that's the next two lessons.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just learned:</b> the 3-cycle — the workhorse of finishing a cube. Move
+    three, leave the rest. You'll use the same idea on the corners.</p>
+  </div>
+
+  <div class="snag">
+    <h4>Snag — no matter how I turn the top, NO edge matches</h4>
+    <p style="margin:0;">That's the "two opposite edges swapped" case. Just run the algorithm <b>from any angle
+    once</b> — it'll create a matched edge. Then do the normal routine: solved edge to the back, run again. Two
+    passes total and you're matched.<sup><a href="#r1">1</a></sup></p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>Understand the slide 🧠</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. Why don't we just lift a yellow edge out and drop it back in matched, like the white cross?</div>
+      <button class="opt" data-k="a">Yellow edges are heavier</button>
+      <button class="opt" data-k="b">Dropping it in would destroy the two solved layers underneath; the algorithm cycles edges without touching them</button>
+      <button class="opt" data-k="c">The white cross method only works on white</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. Before running the 3-cycle, where do you put a matched ("solved") edge?</div>
+      <button class="opt" data-k="a">At the front</button>
+      <button class="opt" data-k="b">On the bottom</button>
+      <button class="opt" data-k="c">At the back — it stays put while the other three cycle</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. A 3-cycle changes a piece's ___ but not its ___.</div>
+      <button class="opt" data-k="a">position (permutation); facing (orientation) — yellow stays up</button>
+      <button class="opt" data-k="b">color; size</button>
+      <button class="opt" data-k="c">orientation; position</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Where this is heading.</strong> Matched cross = last-layer <em>edges</em> fully solved. Two short
+    stages remain, both about the corners: first <b>position</b> them (get each corner to its right home), then
+    <b>twist</b> them so yellow faces up — and on that final twist, the whole top snaps to solid yellow and the
+    cube is <em>solved</em>. Next up, <b>Lesson 9: positioning the corners.</b>
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Can't find a matched edge, or not sure which side is
+    "solved"? Tell me the four side colors at the top (e.g. "front edge green over a red center…") and I'll tell
+    you exactly how to hold it. When all four sides match, tell me <kbd>cross matched</kbd> and we'll start the
+    corners.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Last-layer edge permutation (3-cycle) <code>R U' R U R U R U' R' U' R2</code>, "solved edge to the
+      back," and the no-match case — <a href="https://www.cubeskills.com/uploads/pdf/tutorials/the-beginners-method-for-solving-the-rubiks-cube.pdf">CubeSkills, Beginner's Method (Feliks Zemdegs)</a>, Last Layer Edge Permutation.</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 8 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {ok:"✓ Exactly. You're reading the cube, not just chanting.", no:"Not quite — re-read the section above and try again."};
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){btn.classList.add('correct'); fb.textContent=msgs.ok; fb.className='fb show ok';}
+        else{btn.classList.add('wrong'); q.querySelector('[data-k="'+correct+'"]').classList.add('correct'); fb.textContent=msgs.no; fb.className='fb show no';}
+      });
+    });
+  });
+  document.querySelectorAll('.mcard').forEach(function(card){
+    var ok = card.getAttribute('data-ok');
+    var fb = card.querySelector('.mfb');
+    var notes = {yes:"✓ Matched — same color top and bottom. This is your 'solved edge' to park at the back.",
+      no:"✓ Right — different colors, so this one still needs to cycle.",
+      wy:"✗ Look again — the two colors differ, so it's not matched.",
+      wn:"✗ Look again — top and bottom are the same color, that one IS matched."};
+    card.querySelectorAll('.mbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.getAttribute('data-v');
+        card.querySelectorAll('.mbtn').forEach(function(b){b.classList.remove('gd','bd');});
+        var right = (v === ok);
+        btn.classList.add(right ? 'gd' : 'bd');
+        if(right){ fb.textContent = (ok==='yes'?notes.yes:notes.no); fb.style.color='#1d6b3c'; }
+        else { fb.textContent = (v==='yes'?notes.wy:notes.wn); fb.style.color='#9a2b1e'; }
+      });
+    });
+  });
+</script>
+</body>
+</html>
