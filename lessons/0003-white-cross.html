@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 3 — The White Cross</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent);
+    margin:0 0 10px;
+  }
+  h1{font-size:2.5rem; line-height:1.1; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;}
+  .mission{
+    background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;
+  }
+  .mission strong{color:var(--amber);}
+  .big-idea{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);
+  }
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.35rem; line-height:1.4; margin:0; font-weight:600;}
+  .roadmap{list-style:none; padding:0; margin:18px 0; counter-reset:rm;}
+  .roadmap li{position:relative; padding:10px 14px 10px 46px; border:1px solid var(--line); border-radius:9px; margin:8px 0; background:var(--card); font-size:.96rem;}
+  .roadmap li::before{counter-increment:rm; content:counter(rm); position:absolute; left:12px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:50%; background:#eee; color:var(--muted); font-family:ui-monospace,monospace; font-size:.82rem; display:flex; align-items:center; justify-content:center; font-weight:700;}
+  .roadmap li.now{border-color:var(--green); background:#f3f8f4;}
+  .roadmap li.now::before{background:var(--green); color:#fff;}
+  .roadmap li.done{opacity:.6;}
+  .roadmap li.done::before{background:var(--blue); color:#fff;}
+  .roadmap b{font-weight:700;}
+  .roadmap .you{font-family:ui-monospace,monospace; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--green); margin-left:6px;}
+  .key{
+    background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;
+  }
+  .key strong{color:#5b3fb0;}
+  .hands{
+    background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px;
+    padding:18px 22px; margin:22px 0;
+  }
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ "; }
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:22px 24px; margin:22px 0;
+  }
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{
+    display:block; width:100%; text-align:left; cursor:pointer;
+    background:#faf9f6; border:1px solid var(--line); border-radius:8px;
+    padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;
+  }
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{
+    background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;
+  }
+  .ceiling strong{color:#5b3fb0;}
+  .ask{
+    margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;
+  }
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 3</p>
+  <h1>The White Cross</h1>
+  <p class="sub">First real progress on the cube in your hand. No memorized algorithm — pure reasoning.</p>
+
+  <p class="recall"><b>New reality:</b> your cube is scrambled, and the goal is now plain — solve
+  <em>this</em> one. You've got the two tools you need: you see <b>pieces</b> not stickers
+  (Lesson 1), and you can <b>name moves</b> with <span class="mv">U D F B R L</span> and primes
+  (Lesson 2). Time to use them.</p>
+
+  <div class="mission">
+    <strong>Why this lesson?</strong> Every solving method builds the cube one layer at a time, and
+    it starts here. The white cross is the <em>only</em> stage you can solve by pure intuition — no
+    algorithm to memorize — which makes it the perfect place to feel what "delivering a piece to its
+    home" actually means with your hands. Get this and you've broken the seal on solving.
+  </div>
+
+  <h2>The whole road — so you can see where you are</h2>
+  <p>The beginner method solves the cube in <b>6 stages</b>, bottom layer to top.<sup><a href="#r1">1</a></sup>
+  You don't need to hold all of this — just see the shape of the journey:</p>
+  <ol class="roadmap">
+    <li class="now"><b>White cross</b> — the 4 white edges, matched to side centers <span class="you">you are here</span></li>
+    <li><b>White corners</b> — finish the entire first layer</li>
+    <li><b>Middle layer</b> — the 4 edges around the equator</li>
+    <li><b>Yellow cross</b> — flip the last-layer edges so yellow faces up</li>
+    <li><b>Orient last layer</b> — get all yellow on top</li>
+    <li><b>Permute last layer</b> — slide the final pieces into their homes. Solved.</li>
+  </ol>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>A white edge is "home" only when its <em>white</em> sticker points up <b>and</b> its
+    <em>other</em> color matches the center it sits against. Both, or it's in the wrong slot.</p>
+  </div>
+
+  <p>This is Lesson 1's place-vs-orientation idea made real. Each white edge has two colors — say
+  white+red. Its one true home is between the white center and the red center. If you just jam any
+  white sticker on top without checking the second color, you've oriented it but <em>mis-placed</em>
+  it — a fake cross. Beginners make this exact mistake and then can't finish. You won't.</p>
+
+  <div class="key">
+    <strong>Why white first, and why a cross?</strong> The white center is bolted to the core
+    (Lesson 1) — it's a fixed anchor you can build against. And the 4 white <em>edges</em> form a
+    cross because each edge lives between two centers; placed correctly they radiate out from the
+    white center like spokes, each spoke's side color flowing into the matching face. The cross is
+    just "all four white edges, home."
+  </div>
+
+  <h2>The method — white center on top</h2>
+  <p>Hold your cube with the <b>white center facing up</b> the whole time. We'll lift white edges up
+  from the bottom into the cross, one at a time.<sup><a href="#r1">1</a></sup></p>
+
+  <div class="hands">
+    <h3>Hands-on: build your first cross <span class="win">~8 min · real progress</span></h3>
+    <ol class="steps">
+      <li><b>Find a white edge in the bottom layer.</b> Look around the bottom for any edge piece
+      with a white sticker on it. (An edge has 2 colors — Lesson 1.)</li>
+      <li><b>Read its other color.</b> Say the edge is white+blue. The blue sticker is the one that
+      has to match a center.</li>
+      <li><b>Park it under its matching center.</b> Turn the <em>bottom</em> layer (<span class="mv">D</span>
+      or <span class="mv p">D'</span>) until that edge sits directly below the <b>blue</b> side center.
+      Now its home is straight above it.</li>
+      <li><b>Lift it into the cross.</b> Turn that whole face 180° — e.g. if blue is the front,
+      do <span class="mv d">F2</span>. The white edge swings up to the top, white pointing up, blue
+      matching the blue center. One spoke done.</li>
+      <li><b>Repeat for all 4 white edges.</b> Each time, park under the matching center, then turn
+      that face 180° to lift it up. Work around so a finished spoke doesn't get knocked back down.</li>
+      <li><b>Check your cross.</b> White plus sign on top, and — looking at the sides — each edge's
+      second color flows straight into its matching center. That's a <em>true</em> cross.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just did:</b> delivered four pieces to their homes by
+    reasoning about their colors — no algorithm, no memorization. That's the whole game, in miniature.</p>
+  </div>
+
+  <div class="snag">
+    <h4>Snag 1 — the white edge isn't in the bottom layer</h4>
+    <p style="margin:0;">If a white edge is stuck in the top or middle, turn a face to drop it down
+    into the bottom layer first, then solve it the normal way. Don't fight it up top — get it to the
+    bottom and run the 4 steps.</p>
+  </div>
+  <div class="snag">
+    <h4>Snag 2 — the edge is in the bottom but white points sideways (flipped)</h4>
+    <p style="margin:0;">If the white sticker faces out instead of down, the simple 180° lift would
+    put white on the <em>side</em>, not the top. Park it under its matching center anyway, then use a
+    single quarter-turn plus a small adjustment to feed it in white-up. Easiest fix: just turn that
+    face <em>once</em> (<span class="mv">F</span>) to bring it to the middle, line it up, and tuck it
+    in — or ask me and I'll walk the exact turns for your specific edge.</p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>Did the lens hold? 🔍</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. You get all 4 white stickers onto the top face, but two of the side colors don't match their centers. Is the cross done?</div>
+      <button class="opt" data-k="a">Yes — all the white is on top, that's the cross</button>
+      <button class="opt" data-k="b">No — those edges are oriented but in the wrong slots; the side colors must match too</button>
+      <button class="opt" data-k="c">Yes, side colors fix themselves in the next stage</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. A white+green edge is in the bottom layer. What do you do before lifting it up?</div>
+      <button class="opt" data-k="a">Turn the top until green is on top</button>
+      <button class="opt" data-k="b">Lift it immediately with any face turn</button>
+      <button class="opt" data-k="c">Turn the bottom layer until the edge is under the green center, then turn that face 180°</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. Why can you solve the white cross by intuition, with no memorized algorithm?</div>
+      <button class="opt" data-k="a">Because you're just moving each edge to a home you can see from its two colors — placement reasoning, not a fixed recipe</button>
+      <button class="opt" data-k="b">Because the cross is the only random part of the cube</button>
+      <button class="opt" data-k="c">Because white pieces obey different rules than the others</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Why it gets harder after this (and that's the point).</strong> The cross is intuitive
+    because the edges have nowhere to interfere. Soon, placing one piece will <em>disturb</em> others
+    — and that's exactly when we'll need <b>algorithms</b>: short move-strings (like the sexy move you
+    felt in Lesson 2) engineered to move a few pieces while <em>putting everything else back</em>.
+    You'll understand each one as "a controlled cycle," not a spell. That starts in Lesson 4.
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Stuck on a flipped edge? Cross looks right
+    but one color's off? Tell me the two colors on the edge and where it is, and I'll give you the
+    exact turns. When your white cross is built — true cross, side colors matched — tell me
+    <kbd>done</kbd> and I'll build Lesson 4: <em>the white corners</em>, where you'll meet your first
+    real algorithm and learn to read what it does.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">White cross method (white center up, match each edge's second color to its side center) and the 6-stage beginner method — <a href="https://www.jperm.net/3x3">J Perm, How To Solve The 3×3</a>, Step 1.</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 3 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {
+      ok: "✓ Exactly. You're reasoning about pieces, not guessing.",
+      no: "Not quite — re-read the section above and try again."
+    };
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){
+          btn.classList.add('correct');
+          fb.textContent = msgs.ok; fb.className = 'fb show ok';
+        } else {
+          btn.classList.add('wrong');
+          q.querySelector('[data-k="'+correct+'"]').classList.add('correct');
+          fb.textContent = msgs.no; fb.className = 'fb show no';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

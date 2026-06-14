@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 2 — The Language of Moves</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent);
+    margin:0 0 10px;
+  }
+  h1{font-size:2.5rem; line-height:1.1; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code, .mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.95em; font-weight:600; letter-spacing:.02em; display:inline-block;}
+  .mv.p{background:#5b3fb0;}
+  .mv.d{background:#2d6cdf;}
+  .mission{
+    background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;
+  }
+  .mission strong{color:var(--amber);}
+  .big-idea{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);
+  }
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.35rem; line-height:1.4; margin:0; font-weight:600;}
+  .faces{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:22px 0;}
+  @media(max-width:560px){.faces{grid-template-columns:1fr 1fr;}}
+  .face{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:14px 12px; text-align:center;
+  }
+  .face .ltr{font-family:ui-monospace,monospace; font-size:1.9rem; font-weight:700; color:var(--ink); line-height:1;}
+  .face .nm{font-weight:700; font-size:.98rem; margin:6px 0 4px;}
+  .face .desc{font-size:.82rem; color:var(--muted); margin:0; line-height:1.4;}
+  table.mods{width:100%; border-collapse:collapse; margin:18px 0; font-size:.96rem;}
+  table.mods th, table.mods td{border:1px solid var(--line); padding:10px 12px; text-align:left;}
+  table.mods th{background:#f3f1ec; font-family:ui-monospace,monospace; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
+  table.mods td:first-child{white-space:nowrap;}
+  .key{
+    background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;
+  }
+  .key strong{color:#5b3fb0;}
+  .hands{
+    background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px;
+    padding:18px 22px; margin:22px 0;
+  }
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ "; }
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .quiz{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:22px 24px; margin:22px 0;
+  }
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{
+    display:block; width:100%; text-align:left; cursor:pointer;
+    background:#faf9f6; border:1px solid var(--line); border-radius:8px;
+    padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;
+  }
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{
+    background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;
+  }
+  .ceiling strong{color:#5b3fb0;}
+  .ask{
+    margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;
+  }
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 2</p>
+  <h1>The Language of Moves</h1>
+  <p class="sub">Six letters and two marks. Once you can name a move, you can reason about it.</p>
+
+  <p class="recall"><b>From Lesson 1:</b> the cube is 20 movable <em>pieces</em> (12 edges, 8 corners)
+  riding on 6 fixed centers, and solving means getting each piece <em>home</em> and
+  <em>facing the right way</em>. Hold that lens — we now need a way to <em>name</em> the turns
+  that move those pieces.</p>
+
+  <div class="mission">
+    <strong>Why this lesson?</strong> Your mission is to understand <em>why</em> a sequence of
+    moves does what it does — like "this triggers a 3-cycle of corners and touches nothing else."
+    You can't see that pattern until you can write the moves down. Notation is the alphabet.
+    By the end of this 6-minute lesson you'll read and perform any move sequence — and you'll
+    discover, with your own hands, that a short sequence is a <em>controlled, repeatable</em>
+    change to the cube. That discovery is the doorway to every algorithm.
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>Each letter names <em>one face</em>, and turning that face a quarter-turn
+    <em>clockwise</em> — clockwise as if that face were staring you in the eye.</p>
+  </div>
+
+  <h2>The six faces</h2>
+  <p>Hold your cube still in front of you. It has six faces, and each gets a single letter from
+  its position relative to <em>you</em>:<sup><a href="#r1">1</a></sup></p>
+
+  <div class="faces">
+    <div class="face"><div class="ltr">U</div><div class="nm">Up</div><p class="desc">The top face.</p></div>
+    <div class="face"><div class="ltr">D</div><div class="nm">Down</div><p class="desc">The bottom face.</p></div>
+    <div class="face"><div class="ltr">F</div><div class="nm">Front</div><p class="desc">Facing you.</p></div>
+    <div class="face"><div class="ltr">B</div><div class="nm">Back</div><p class="desc">Away from you.</p></div>
+    <div class="face"><div class="ltr">R</div><div class="nm">Right</div><p class="desc">Your right hand.</p></div>
+    <div class="face"><div class="ltr">L</div><div class="nm">Left</div><p class="desc">Your left hand.</p></div>
+  </div>
+
+  <p>A bare letter — <span class="mv">R</span> — means: grab the <b>right</b> layer and turn it
+  a quarter-turn (90°) <b>clockwise</b>. The catch that trips everyone up: clockwise is judged
+  <em>from the perspective of looking straight at that face</em>. So <span class="mv">R</span>
+  sends the front-right column <em>upward</em>; but <span class="mv">L</span> — clockwise as seen
+  from the left — sends the front-left column <em>downward</em>. They mirror each other.</p>
+
+  <h2>The two modifiers</h2>
+  <table class="mods">
+    <tr><th>Written</th><th>Means</th><th>Example</th></tr>
+    <tr><td><span class="mv">R</span></td><td>Quarter-turn <b>clockwise</b> (90°)</td><td>Right face, clockwise</td></tr>
+    <tr><td><span class="mv p">R&#39;</span> <span style="color:var(--muted)">("R prime")</span></td><td>Quarter-turn <b>counter-clockwise</b> (90° the other way)</td><td>Right face, anti-clockwise</td></tr>
+    <tr><td><span class="mv d">R2</span></td><td><b>Half-turn</b> (180°) — direction doesn't matter, same result</td><td>Right face, flipped around</td></tr>
+  </table>
+
+  <p>That's the entire system. Six letters × three flavours (plain, prime, 2) = 18 possible
+  single moves, and every solve on Earth — beginner or world-record — is just a string of these.<sup><a href="#r2">2</a></sup></p>
+
+  <div class="key">
+    <strong>The prime is just "undo."</strong> <span class="mv">R</span> then <span class="mv p">R'</span>
+    leaves the cube exactly as it was — you turned one way, then back. This sounds trivial, but
+    it's the secret engine of algorithms: solvers build sequences that <em>mostly</em> cancel
+    themselves out, so only a tiny, predictable handful of pieces end up changed. You're about to
+    feel that for yourself.
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: feel a move become a machine <span class="win">4 min · the real win</span></h3>
+    <p>Start from your <b>solved</b> cube. Keep it in a fixed orientation the whole time — white on
+    top is fine; <b>don't rotate the whole cube</b> between moves, only turn the named face.</p>
+    <ol class="steps">
+      <li><b>Name one move.</b> Do a single <span class="mv">R</span>. Watch which pieces left home:
+      4 corners and 4 edges of the right face moved; everything else — and every center — stayed.
+      One letter, one clean quarter-turn.</li>
+      <li><b>Undo it.</b> Now do <span class="mv p">R'</span>. Solved again. You just proved
+      <span class="mv">R</span> and <span class="mv p">R'</span> are exact opposites.</li>
+      <li><b>The big one — the "sexy move."</b> Perform this 4-move sequence, slowly, reading it
+      left to right:<br>
+      <div style="text-align:center; margin:12px 0;">
+        <span class="mv">R</span> <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span>
+      </div>
+      The cube is now slightly scrambled — just a few pieces are out. Good. <b>Don't fix it.</b></li>
+      <li><b>Repeat the exact same four moves again.</b> And again. Keep going.
+      Count how many times total you perform <span class="mv">R</span> <span class="mv">U</span>
+      <span class="mv p">R'</span> <span class="mv p">U'</span>.</li>
+      <li><b>Watch what happens at the 6th repetition.</b> The cube returns — perfectly solved.
+      Six times through, and you're home.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just proved:</b> a written sequence isn't random — it's
+    a <em>machine with a fixed period</em>. <span class="mv">R</span> <span class="mv">U</span>
+    <span class="mv p">R'</span> <span class="mv p">U'</span> cycles a small set of pieces and,
+    repeated 6 times, brings every one of them back home.<sup><a href="#r3">3</a></sup> That is
+    exactly what an "algorithm" is: a named string of moves with a known, controlled effect.
+    Notation is what let you <em>see</em> it.</p>
+  </div>
+
+  <h2>Quick check</h2>
+  <p>Reason it out — instant feedback below each.</p>
+
+  <div class="quiz">
+    <h3>Read the language 🔤</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. What does <span class="mv p">U&#39;</span> tell you to do?</div>
+      <button class="opt" data-k="a">Turn the up face 180°</button>
+      <button class="opt" data-k="b">Turn the up face a quarter-turn counter-clockwise</button>
+      <button class="opt" data-k="c">Turn the up face twice clockwise</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. You just did <span class="mv">F</span>. What single move puts everything back exactly as it was?</div>
+      <button class="opt" data-k="a"><span class="mv">F</span> again</button>
+      <button class="opt" data-k="b"><span class="mv d">F2</span></button>
+      <button class="opt" data-k="c"><span class="mv p">F&#39;</span></button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. Why does repeating <span class="mv">R</span> <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> eventually solve the cube again, instead of scrambling it more and more?</div>
+      <button class="opt" data-k="a">Because it only cycles a small fixed set of pieces, so after enough repeats they all return home</button>
+      <button class="opt" data-k="b">Because the primes erase the cube's memory each time</button>
+      <button class="opt" data-k="c">Because center pieces slowly pull the others back</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Where this is heading.</strong> Now that you can name moves, the next question is the
+    heart of your mission: <em>how does a sequence move pieces in a predictable pattern?</em> The
+    answer is two ideas — <b>permutation</b> (which pieces swap places) and <b>cycles</b> (pieces
+    chasing each other around a loop, like the 6-period machine you just felt). Once you can read a
+    sequence as "a 3-cycle of these corners, nothing else," you've crossed from doing the cube to
+    <em>understanding</em> it. That's Lesson 3.
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Confused about why <span class="mv">L</span>
+    looks like it goes "down" while <span class="mv">R</span> goes "up"? Want me to clarify clockwise-from-whose-view,
+    or what a "double layer" or whole-cube rotation is? Just ask. When you've done the hands-on
+    (especially the 6× sexy-move loop) and the quiz, tell me <kbd>done</kbd> and I'll build
+    Lesson 3: <em>permutations &amp; cycles</em> — how to actually read what a sequence does to the pieces.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Face letters U/D/F/B/R/L and clockwise-from-the-face convention — <a href="https://www.jperm.net/3x3/moves">J Perm, Move Notation</a>.</li>
+      <li id="r2">Primes and double turns; the 18 basic moves — <a href="https://ruwix.com/the-rubiks-cube/notation/">Ruwix, Rubik's Cube Notation</a>.</li>
+      <li id="r3">The sequence <code>R U R' U'</code> ("sexy move") has order 6 — repeating it six times returns a solved cube to solved — <a href="https://ruwix.com/the-rubiks-cube/algorithm/">Ruwix, Algorithms</a>.</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 2 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {
+      ok: "✓ Exactly. You're reading the language now.",
+      no: "Not quite — re-read the section above and try the idea again."
+    };
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){
+          btn.classList.add('correct');
+          fb.textContent = msgs.ok;
+          fb.className = 'fb show ok';
+        } else {
+          btn.classList.add('wrong');
+          q.querySelector('[data-k="'+correct+'"]').classList.add('correct');
+          fb.textContent = msgs.no;
+          fb.className = 'fb show no';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

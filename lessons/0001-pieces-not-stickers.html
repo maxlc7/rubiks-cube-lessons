@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1 — Pieces, Not Stickers</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent);
+    margin:0 0 10px;
+  }
+  h1{font-size:2.5rem; line-height:1.1; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  .mission{
+    background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;
+  }
+  .mission strong{color:var(--amber);}
+  .big-idea{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);
+  }
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.35rem; line-height:1.4; margin:0; font-weight:600;}
+  .pieces{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:22px 0;}
+  @media(max-width:560px){.pieces{grid-template-columns:1fr;}}
+  .piece{
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:16px; text-align:center;
+  }
+  .piece .icon{font-size:2.4rem; line-height:1; margin-bottom:6px;}
+  .piece .name{font-weight:700; font-size:1.05rem;}
+  .piece .count{font-family:ui-monospace,monospace; color:var(--accent); font-size:.85rem; margin:2px 0 8px;}
+  .piece .desc{font-size:.88rem; color:var(--muted); margin:0; line-height:1.45;}
+  .c-center{border-top:3px solid var(--amber);}
+  .c-edge{border-top:3px solid var(--blue);}
+  .c-corner{border-top:3px solid var(--green);}
+  .hands{
+    background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px;
+    padding:18px 22px; margin:22px 0;
+  }
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ "; }
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .quiz{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:22px 24px; margin:22px 0;
+  }
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{
+    display:block; width:100%; text-align:left; cursor:pointer;
+    background:#faf9f6; border:1px solid var(--line); border-radius:8px;
+    padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;
+  }
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{
+    background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;
+  }
+  .ceiling strong{color:#5b3fb0;}
+  .ask{
+    margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;
+  }
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 1</p>
+  <h1>Pieces, Not Stickers</h1>
+  <p class="sub">The one shift in seeing that makes everything else make sense.</p>
+
+  <div class="mission">
+    <strong>Why this lesson?</strong> Your mission is to look at a scrambled cube and
+    <em>understand</em> what's going on — not just memorize moves. You can't reason about
+    a thing you can't see clearly. Right now you probably see <em>54 colored stickers</em>.
+    By the end of this 5-minute lesson you'll see <em>20 movable pieces</em> — and that's
+    the lens every solver actually uses.
+  </div>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>A Rubik's cube is not 6 colored faces. It's a small machine of interlocking
+    <em>pieces</em> that carry their stickers around with them.</p>
+  </div>
+
+  <p>Here's the trap almost every beginner falls into: they look at a face, see a wall of
+  color, and try to "fix the red side." But the colors aren't independent — they're glued
+  in clusters onto physical pieces. A single corner piece carries <em>three</em> stickers
+  at once. When you turn a face, you're not moving stickers; you're moving <strong>pieces</strong>,
+  and every sticker on a piece goes along for the ride, locked in its arrangement.</p>
+
+  <p>Solving the cube is really just <strong>moving every piece back to its home and turning
+  it the right way around</strong>. Nothing more. Once you see pieces, the whole puzzle
+  changes character.</p>
+
+  <h2>The three kinds of piece</h2>
+  <p>Take your cube apart with your eyes (not your hands!). Every one of the little cubies
+  you can see is exactly one of three types, told apart by <em>how many stickers it has</em>:<sup><a href="#r1">1</a></sup></p>
+
+  <div class="pieces">
+    <div class="piece c-center">
+      <div class="icon">●</div>
+      <div class="name">Centers</div>
+      <div class="count">6 · one sticker each</div>
+      <p class="desc">One per face. <b>They never move relative to each other</b> — they're
+      bolted to the core. The center's color <i>defines</i> what that whole face will be.</p>
+    </div>
+    <div class="piece c-edge">
+      <div class="icon">▮</div>
+      <div class="name">Edges</div>
+      <div class="count">12 · two stickers each</div>
+      <p class="desc">Sit between two centers, on the edges of the cube. Two colors, so they
+      have a "home" slot and a correct way to face.</p>
+    </div>
+    <div class="piece c-corner">
+      <div class="icon">◣</div>
+      <div class="name">Corners</div>
+      <div class="count">8 · three stickers each</div>
+      <p class="desc">The 8 corners of the cube. Three colors each — the trickiest, because
+      a corner can be in its home slot but twisted the wrong way.</p>
+    </div>
+  </div>
+
+  <p>Count the stickers: 6×1 + 12×2 + 8×3 = <strong>6 + 24 + 24 = 54</strong>. Exactly the
+  number of stickers on the cube. Every sticker is accounted for, and not one of them lives
+  alone.</p>
+
+  <div class="ceiling">
+    <strong>The center insight that breaks most beginners free:</strong> because the 6 centers
+    are fixed to the core and can't swap, <em>the white face is wherever the white center is —
+    always.</em> You don't get to "choose" where colors go. The scramble already decided each
+    piece's home. Your job is just to deliver each piece to the home its colors demand.
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: prove it to yourself <span class="win">2 min · tangible win</span></h3>
+    <p>You said you have a <em>solved</em> cube in hand. Perfect — let's verify the big idea
+    with your own eyes:</p>
+    <ol class="steps">
+      <li><b>Find a corner piece.</b> Look at any corner. Count its stickers — you'll see
+      three different colors meeting at that one little cube. That's one piece, three colors.</li>
+      <li><b>Find an edge.</b> Look at the middle piece along any top edge. Two stickers, two
+      colors. One piece.</li>
+      <li><b>The center test.</b> Pick any one face — say white — and do this:
+      turn the <em>top</em> layer once. Notice the white <b>center</b> stayed put while the
+      corners and edges around it moved. <b>The center never leaves.</b></li>
+      <li><b>The "it's the same piece" test.</b> Watch one corner piece as you turn a face
+      90°. Track it with your eyes as it travels to a new spot. It's the <em>same physical
+      piece</em> in a new location — its three colors moved together, never splitting up.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just proved:</b> turning a face relocates whole
+    pieces, and centers are anchors. That's the entire physics of the cube.</p>
+  </div>
+
+  <h2>Quick check</h2>
+  <p>Answer these from understanding, not memory. Instant feedback below each.</p>
+
+  <div class="quiz">
+    <h3>Test the lens 🔍</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. How many <em>movable</em> pieces does a 3×3 cube have (i.e. not counting the fixed centers)?</div>
+      <button class="opt" data-k="a">54 — one per sticker</button>
+      <button class="opt" data-k="b">20 — twelve edges plus eight corners</button>
+      <button class="opt" data-k="c">26 — every little cubie</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. You want to "move the white center next to the red center." Can you?</div>
+      <button class="opt" data-k="a">Yes, with the right algorithm</button>
+      <button class="opt" data-k="b">Only by taking the cube apart</button>
+      <button class="opt" data-k="c">No — centers are fixed to the core; their arrangement never changes</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="b">
+      <div class="qt">3. A corner piece is sitting in its correct home slot, but its colors point the wrong way. Is that corner "solved"?</div>
+      <button class="opt" data-k="a">Yes — it's in the right place</button>
+      <button class="opt" data-k="b">No — a piece must be both in the right place <em>and</em> turned the right way</button>
+      <button class="opt" data-k="c">There's no such thing; if it's home, it's correct</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <p>That third idea — <em>place</em> versus <em>orientation</em> — is the seed of everything
+  to come. Solving is two jobs at once: get each piece <b>home</b> (permutation) and get it
+  <b>facing right</b> (orientation). Hold onto that; it's the backbone of how we'll read the
+  last layer later.</p>
+
+  <div class="ceiling">
+    <strong>A peek at your real mission.</strong> You asked about the <em>quickest</em> way to
+    solve any scramble. Here's the honest ceiling: mathematicians proved that <b>every</b> one
+    of the cube's 43,252,003,274,489,856,000 positions can be solved in <b>20 moves or fewer</b>
+    — a result nicknamed "God's Number."<sup><a href="#r2">2</a></sup> But finding that perfect
+    20-move sequence took a cluster of computers ~35 CPU-years.<sup><a href="#r2">2</a></sup>
+    Humans don't chase optimal — we use <em>methods</em> that trade extra moves for something a
+    brain can actually remember and <em>understand</em>. That trade-off is exactly what your
+    learning will be about.
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Stuck on why centers can't move?
+    Want me to explain how the internal core actually works, or whether stickers ever really
+    "swap"? Just ask in the chat. When you've done the hands-on steps and the quiz, tell me
+    <kbd>done</kbd> and I'll build Lesson 2: <em>notation</em> — the simple language for naming
+    moves so we can start talking about solving precisely.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Piece types &amp; counts — <a href="https://ruwix.com/the-rubiks-cube/how-to-solve-the-rubiks-cube-beginners-method/">Ruwix, Beginner's Method</a> and <a href="https://www.jperm.net/3x3">J Perm, How To Solve The 3×3</a>.</li>
+      <li id="r2">God's Number = 20 (half-turn metric), ~35 CPU-years of computation — <a href="https://www.cube20.org/">cube20.org</a>.</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 1 of an ongoing course · saved in <code>teach-rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {
+      ok: "✓ Exactly. You're seeing pieces now.",
+      no: "Not quite — re-read the section above and try the idea again."
+    };
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.disabled=false;});
+        // clear previous
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){
+          btn.classList.add('correct');
+          fb.textContent = msgs.ok;
+          fb.className = 'fb show ok';
+        } else {
+          btn.classList.add('wrong');
+          q.querySelector('[data-k="'+correct+'"]').classList.add('correct');
+          fb.textContent = msgs.no;
+          fb.className = 'fb show no';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
