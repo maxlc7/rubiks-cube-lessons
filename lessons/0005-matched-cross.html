@@ -109,6 +109,17 @@
   .bandlbl span{font-size:.62rem; font-family:ui-monospace,monospace; color:var(--muted); text-align:center;}
   .legend{font-size:.8rem; color:var(--muted); text-align:center; margin-top:6px;}
 
+  /* pointing vocabulary (kit) */
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}   /* green ring = "this is the piece I mean" */
+  .cell.ha{outline:3px solid var(--accent); outline-offset:2px;} /* red ring = a problem / the wrong one */
+  .ptile{display:inline-grid; gap:4px; padding:7px; background:#2b2b2b; border-radius:9px; vertical-align:middle;}
+  .ptile.center{grid-template-columns:34px;}
+  .ptile.edge{grid-template-columns:repeat(2,34px);}
+  .ptile.edge.stackv{grid-template-columns:34px; grid-template-rows:repeat(2,34px);}
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace;
+    letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;} .ptag.r{background:var(--accent);} .ptag.k{background:#1a1a1a;}
+
   /* interactive matcher */
   .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
   .lab h3{margin-top:0;} .lab h3::before{content:"🔬 ";}
@@ -236,6 +247,20 @@
     <li>Repeat for the other three petals. Each edge goes to a <em>different</em> face, so you never re-turn a
       face you've already finished — placed edges stay put.</li>
   </ol>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="stk" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div class="ptile edge stackv">
+          <span class="cell w"></span>
+          <span class="cell r hi"></span>
+        </div>
+        <div><span class="ptag g">match THIS colour to its centre</span></div>
+      </div>
+    </div>
+    <p class="dcap">On a petal, the white points up; the ringed SIDE colour is the one you aim at its matching
+    centre before the 180° drop.</p>
+  </div>
 
   <div class="key">
     <strong>Why this can't collide.</strong> The four cross edges each live on a different side

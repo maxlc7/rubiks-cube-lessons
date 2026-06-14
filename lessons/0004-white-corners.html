@@ -9,6 +9,9 @@
     --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
     --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
     --card:#ffffff;
+    /* cube sticker colours */
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#cfccc4;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -80,6 +83,31 @@
   kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
   .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
   .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  /* ===== CUBE DIAGRAM KIT ===== */
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);}
+  .x{background:var(--c-gray); box-shadow:none;}
+  .face{display:inline-grid; grid-template-columns:repeat(3,34px); gap:5px; padding:8px;
+    background:#2b2b2b; border-radius:10px;}
+  .diagram{display:flex; gap:26px; flex-wrap:wrap; align-items:center; justify-content:center; margin:8px 0 4px;}
+  .dwrap{margin:22px 0;}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
+  .arrow{font-size:1.8rem; color:var(--accent); font-weight:700; line-height:1;}
+  .stk{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .stk .lbl{font-size:.72rem; font-family:ui-monospace,monospace; color:var(--muted); text-align:center; max-width:160px; line-height:1.4;}
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}
+  .cell.ha{outline:3px solid var(--accent); outline-offset:2px;}
+  .ptile{display:inline-grid; gap:4px; padding:7px; background:#2b2b2b; border-radius:9px; vertical-align:middle;}
+  .ptile.center{grid-template-columns:34px;}
+  .ptile.edge{grid-template-columns:repeat(2,34px);}
+  .ptile.corner{grid-template-columns:repeat(2,34px); grid-template-rows:repeat(2,34px);}
+  .ptile.corner .gap{visibility:hidden;}
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace;
+    letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;} .ptag.r{background:var(--accent);} .ptag.k{background:#1a1a1a;}
 </style>
 </head>
 <body>
@@ -123,6 +151,26 @@
     meet their matching centers. Park it in the top right above that slot, then screw it in.</p>
   </div>
 
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="stk">
+        <div class="lbl">the white+green+orange <span class="ptag g">corner</span></div>
+        <div class="ptile corner"><span class="cell w hi"></span><span class="cell g"></span><span class="cell o"></span><span class="cell gap"></span></div>
+        <div class="lbl">the ringed <b>white</b> sticker goes down</div>
+      </div>
+      <div class="arrow">&#8594;</div>
+      <div class="stk">
+        <div class="lbl">drop it where these two centers meet</div>
+        <div class="diagram" style="gap:10px; margin:0;">
+          <span class="cell g"></span><span class="cell o"></span>
+        </div>
+        <div class="lbl"><b>green</b> face &amp; <b>orange</b> face</div>
+      </div>
+    </div>
+    <p class="dcap">The white+green+orange corner belongs in the one slot where the green and orange faces
+    meet (white on the bottom).</p>
+  </div>
+
   <h2>The algorithm — the "right-hand 4-move"</h2>
   <p>Hold the cube with white on the bottom. The insertion tool is:<sup><a href="#r1">1</a></sup></p>
   <div class="algo">
@@ -156,6 +204,23 @@
       <li><b>Hold the target slot at front-right</b>, then do <span class="mv">R</span> <span class="mv">U</span>
       <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span>. Look. Not in yet? Do it again.
       Repeat (max 3×) until the corner clicks home: white on the bottom, both side colors matching.</li>
+    </ol>
+    <div class="dwrap">
+      <div class="diagram">
+        <div class="stk">
+          <div class="lbl">looking straight down at the open yellow top layer</div>
+          <div class="face">
+            <span class="cell y hi"></span><span class="cell y"></span><span class="cell y"></span>
+            <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+            <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+          </div>
+          <div class="lbl"><span class="ptag g">park the white corner here</span> (above its slot)</div>
+        </div>
+      </div>
+      <p class="dcap">Stage the corner in the open top layer directly above its home, then run
+      <span class="mv">R</span> <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span>.</p>
+    </div>
+    <ol class="steps" start="5">
       <li><b>Repeat for all 4 white corners.</b> Each time: find a white corner up top → park above its
       slot → hold that slot front-right → 4-move until seated.</li>
       <li><b>First layer complete.</b> The entire white face is solid white, and the top row of all four
@@ -172,6 +237,15 @@
     up top. Pop it out: hold that bad slot at front-right and do <span class="mv">R</span> <span class="mv">U</span>
     <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> once — it kicks the corner up into the
     top layer. Now solve it normally.<sup><a href="#r1">1</a></sup></p>
+    <div class="dwrap">
+      <div class="diagram">
+        <div class="stk">
+          <div class="ptile corner"><span class="cell w"></span><span class="cell g"></span><span class="cell o ha"></span><span class="cell gap"></span></div>
+          <div class="lbl"><span class="ptag r">wrong / twisted</span> seated in the bottom, but turned the wrong way</div>
+        </div>
+      </div>
+      <p class="dcap">Do the 4-move once to kick it up top, then re-insert.</p>
+    </div>
   </div>
 
   <h2>Quick check</h2>

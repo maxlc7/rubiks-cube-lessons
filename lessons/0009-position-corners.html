@@ -87,6 +87,9 @@
   .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);} .x{background:var(--c-gray);}
   .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
   .fru{display:inline-block; background:#1f7a4d; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace; padding:2px 7px; border-radius:20px;}
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace; letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;}
 
   .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
   .lab h3{margin-top:0;} .lab h3::before{content:"🏠 ";}
@@ -130,6 +133,19 @@
   <em>any</em> rotation. Example: the corner that belongs between the red and green faces (with yellow on top) is
   the red+green+yellow piece. If that piece is sitting there — even twisted so yellow faces sideways — it's
   home.<sup><a href="#r1">1</a></sup></p>
+
+  <div style="margin:22px 0;">
+    <div style="display:flex; gap:22px; flex-wrap:wrap; align-items:center; justify-content:center;">
+      <div class="trio" style="margin:0; outline:3px solid #1f7a4d; outline-offset:5px; border-radius:4px;">
+        <span class="cell r"></span><span class="cell g"></span><span class="cell y"></span>
+      </div>
+      <span class="ptag g">= the 3 faces here &rArr; HOME</span>
+      <div class="trio" style="margin:0;">
+        <span class="cell r"></span><span class="cell g"></span>
+      </div>
+    </div>
+    <div class="dcap">If a corner's three colours are exactly the trio of faces meeting at its spot (here red, green, and the yellow top), it's home — even if it's twisted.</div>
+  </div>
 
   <div style="margin:22px 0;">
     <div class="dcap" style="margin-bottom:8px;">Looking down at the top. The <span class="fru">FRU</span> corner is the one nearest you on the right.</div>

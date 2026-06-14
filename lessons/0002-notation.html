@@ -9,6 +9,9 @@
     --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
     --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
     --card:#ffffff;
+    /* cube sticker colours */
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#cfccc4;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -46,15 +49,15 @@
   }
   .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
   .big-idea p{font-size:1.35rem; line-height:1.4; margin:0; font-weight:600;}
-  .faces{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:22px 0;}
-  @media(max-width:560px){.faces{grid-template-columns:1fr 1fr;}}
-  .face{
+  .fcards{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:22px 0;}
+  @media(max-width:560px){.fcards{grid-template-columns:1fr 1fr;}}
+  .fcard{
     background:var(--card); border:1px solid var(--line); border-radius:10px;
     padding:14px 12px; text-align:center;
   }
-  .face .ltr{font-family:ui-monospace,monospace; font-size:1.9rem; font-weight:700; color:var(--ink); line-height:1;}
-  .face .nm{font-weight:700; font-size:.98rem; margin:6px 0 4px;}
-  .face .desc{font-size:.82rem; color:var(--muted); margin:0; line-height:1.4;}
+  .fcard .ltr{font-family:ui-monospace,monospace; font-size:1.9rem; font-weight:700; color:var(--ink); line-height:1;}
+  .fcard .nm{font-weight:700; font-size:.98rem; margin:6px 0 4px;}
+  .fcard .desc{font-size:.82rem; color:var(--muted); margin:0; line-height:1.4;}
   table.mods{width:100%; border-collapse:collapse; margin:18px 0; font-size:.96rem;}
   table.mods th, table.mods td{border:1px solid var(--line); padding:10px 12px; text-align:left;}
   table.mods th{background:#f3f1ec; font-family:ui-monospace,monospace; font-size:.8rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);}
@@ -108,6 +111,33 @@
   kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
   .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
   .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  /* ===== CUBE DIAGRAM KIT ===== */
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);}
+  .x{background:var(--c-gray); box-shadow:none;}
+  .face{display:inline-grid; grid-template-columns:repeat(3,34px); gap:5px; padding:8px;
+    background:#2b2b2b; border-radius:10px;}
+  .diagram{display:flex; gap:26px; flex-wrap:wrap; align-items:center; justify-content:center; margin:8px 0 4px;}
+  .dwrap{margin:22px 0;}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
+  .arrow{font-size:1.8rem; color:var(--accent); font-weight:700; line-height:1;}
+  .stk{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .stk .lbl{font-size:.72rem; font-family:ui-monospace,monospace; color:var(--muted); text-align:center; max-width:160px; line-height:1.4;}
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}
+  .cell.ha{outline:3px solid var(--accent); outline-offset:2px;}
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace;
+    letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;} .ptag.r{background:var(--accent);} .ptag.k{background:#1a1a1a;}
+  .rot{font-size:2.4rem; line-height:1; color:var(--accent); font-weight:700;}
+  .rot.ccw{color:#5b3fb0;}
+  .net{display:inline-grid; grid-template-columns:repeat(4,46px); grid-template-rows:repeat(3,46px); gap:6px;}
+  .nface{display:flex; align-items:center; justify-content:center; border-radius:7px; flex-direction:column;
+    font-family:ui-monospace,monospace; font-weight:700; font-size:1.15rem; color:#fff;
+    border:1px solid rgba(0,0,0,.18); box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);}
+  .nface small{display:block; font-size:.5rem; letter-spacing:.06em; opacity:.85; margin-top:1px;}
 </style>
 </head>
 <body>
@@ -141,13 +171,28 @@
   <p>Hold your cube still in front of you. It has six faces, and each gets a single letter from
   its position relative to <em>you</em>:<sup><a href="#r1">1</a></sup></p>
 
-  <div class="faces">
-    <div class="face"><div class="ltr">U</div><div class="nm">Up</div><p class="desc">The top face.</p></div>
-    <div class="face"><div class="ltr">D</div><div class="nm">Down</div><p class="desc">The bottom face.</p></div>
-    <div class="face"><div class="ltr">F</div><div class="nm">Front</div><p class="desc">Facing you.</p></div>
-    <div class="face"><div class="ltr">B</div><div class="nm">Back</div><p class="desc">Away from you.</p></div>
-    <div class="face"><div class="ltr">R</div><div class="nm">Right</div><p class="desc">Your right hand.</p></div>
-    <div class="face"><div class="ltr">L</div><div class="nm">Left</div><p class="desc">Your left hand.</p></div>
+  <div class="fcards">
+    <div class="fcard"><div class="ltr">U</div><div class="nm">Up</div><p class="desc">The top face.</p></div>
+    <div class="fcard"><div class="ltr">D</div><div class="nm">Down</div><p class="desc">The bottom face.</p></div>
+    <div class="fcard"><div class="ltr">F</div><div class="nm">Front</div><p class="desc">Facing you.</p></div>
+    <div class="fcard"><div class="ltr">B</div><div class="nm">Back</div><p class="desc">Away from you.</p></div>
+    <div class="fcard"><div class="ltr">R</div><div class="nm">Right</div><p class="desc">Your right hand.</p></div>
+    <div class="fcard"><div class="ltr">L</div><div class="nm">Left</div><p class="desc">Your left hand.</p></div>
+  </div>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="net">
+        <div class="nface" style="grid-column:2;grid-row:1;background:#9aa0a6;color:#1a1a1a;">U<small>UP</small></div>
+        <div class="nface" style="grid-column:1;grid-row:2;background:var(--c-orange);">L<small>LEFT</small></div>
+        <div class="nface" style="grid-column:2;grid-row:2;background:var(--c-green);">F<small>FRONT</small></div>
+        <div class="nface" style="grid-column:3;grid-row:2;background:var(--c-red);">R<small>RIGHT</small></div>
+        <div class="nface" style="grid-column:4;grid-row:2;background:var(--c-blue);">B<small>BACK</small></div>
+        <div class="nface" style="grid-column:2;grid-row:3;background:var(--c-yellow);color:#1a1a1a;">D<small>DOWN</small></div>
+      </div>
+    </div>
+    <p class="dcap">The cube "unfolded" flat. Each letter points to the face in that position
+    <em>relative to you</em> — <b>F</b> is whatever's facing you, <b>U</b> is the top, and so on.</p>
   </div>
 
   <p>A bare letter — <span class="mv">R</span> — means: grab the <b>right</b> layer and turn it
@@ -163,6 +208,40 @@
     <tr><td><span class="mv p">R&#39;</span> <span style="color:var(--muted)">("R prime")</span></td><td>Quarter-turn <b>counter-clockwise</b> (90° the other way)</td><td>Right face, anti-clockwise</td></tr>
     <tr><td><span class="mv d">R2</span></td><td><b>Half-turn</b> (180°) — direction doesn't matter, same result</td><td>Right face, flipped around</td></tr>
   </table>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="stk">
+        <div class="rot">&#8635;</div>
+        <div class="face">
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+        </div>
+        <div class="lbl"><span class="ptag k">R</span> quarter-turn <b>clockwise</b></div>
+      </div>
+      <div class="stk">
+        <div class="rot ccw">&#8634;</div>
+        <div class="face">
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+        </div>
+        <div class="lbl"><span class="ptag" style="background:#5b3fb0;">R&#39;</span> counter-clockwise &mdash; the exact undo</div>
+      </div>
+      <div class="stk">
+        <div class="rot">&#8635;<span style="font-size:1rem;vertical-align:super;">2</span></div>
+        <div class="face">
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+          <span class="cell r"></span><span class="cell r"></span><span class="cell r"></span>
+        </div>
+        <div class="lbl"><span class="ptag" style="background:#2d6cdf;">R2</span> half-turn, 180&deg;</div>
+      </div>
+    </div>
+    <p class="dcap">Same face (the red <b>R</b>ight face), three amounts of turn. The curved arrow points
+    the direction; "clockwise" is judged as if you're staring straight at that face.</p>
+  </div>
 
   <p>That's the entire system. Six letters × three flavours (plain, prime, 2) = 18 possible
   single moves, and every solve on Earth — beginner or world-record — is just a string of these.<sup><a href="#r2">2</a></sup></p>

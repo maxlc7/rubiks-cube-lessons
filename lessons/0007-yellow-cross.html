@@ -96,6 +96,11 @@
   .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:10px 0 0; font-style:italic;}
   .flow{display:flex; align-items:center; gap:14px; justify-content:center; flex-wrap:wrap; margin:14px 0;}
   .flow .arrow{font-size:1.6rem; color:var(--accent);}
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}
+  .cell.ha{outline:3px solid var(--accent); outline-offset:2px;}
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace;
+    letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;} .ptag.r{background:var(--accent);} .ptag.k{background:#1a1a1a;}
 
   /* interactive */
   .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
@@ -145,6 +150,18 @@
   <h2>Read the case: Dot, L, or Line</h2>
   <p>Look straight down at the yellow top. Count only the <b>edges</b> (the 4 middle-of-a-side stickers, not the
   corners). You'll be in exactly one of these:<sup><a href="#r1">1</a></sup></p>
+
+  <div class="diagram">
+    <div class="case">
+      <div class="face">
+        <span class="cell x"></span><span class="cell y hi"></span><span class="cell x"></span>
+        <span class="cell y hi"></span><span class="cell y"></span><span class="cell y hi"></span>
+        <span class="cell x"></span><span class="cell y hi"></span><span class="cell x"></span>
+      </div>
+      <div class="nm"><span class="ptag g">read only these 4 edges</span></div>
+    </div>
+  </div>
+  <p class="dcap">When you read Dot/L/Line, you count only the four ringed EDGE stickers — the corners and the always-yellow centre don't count.</p>
 
   <div class="diagram">
     <div class="case">

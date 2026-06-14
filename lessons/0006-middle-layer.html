@@ -101,6 +101,15 @@
   .stk{display:flex; flex-direction:column; align-items:center; gap:6px;}
   .stk .lbl{font-size:.7rem; font-family:ui-monospace,monospace; color:var(--muted);}
 
+  /* pointing helpers (kit) */
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}
+  .cell.ha{outline:3px solid var(--accent); outline-offset:2px;}
+  .ptile{display:inline-grid; gap:4px; padding:7px; background:#2b2b2b; border-radius:9px; vertical-align:middle;}
+  .ptile.edge{grid-template-columns:repeat(2,34px);}
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace;
+    letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;} .ptag.r{background:var(--accent);}
+
   /* interactive lab */
   .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
   .lab h3{margin-top:0;} .lab h3::before{content:"🧭 ";}
@@ -146,6 +155,22 @@
     <strong>Yellow is your "not yet" flag.</strong> Every middle-layer edge has two colors and <em>neither is
     yellow</em> (yellow edges belong in the last layer, so leave them on top). So your first move each time is a
     filter: spot a top edge with no yellow — that's a middle piece looking for its home.
+  </div>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="stk">
+        <div class="lbl"><span class="ptag g">middle-layer edge (no yellow)</span></div>
+        <div class="ptile edge"><span class="cell r hi"></span><span class="cell b hi"></span></div>
+        <div class="lbl">red + blue → belongs in the belt</div>
+      </div>
+      <div class="stk">
+        <div class="lbl"><span class="ptag r">leave on top</span></div>
+        <div class="ptile edge"><span class="cell y ha"></span><span class="cell g ha"></span></div>
+        <div class="lbl">has yellow → last-layer edge</div>
+      </div>
+    </div>
+    <p class="dcap">The no-yellow filter: an edge with no yellow belongs in the belt; any yellow edge stays up top for the last layer.</p>
   </div>
 
   <h2>The decision: left or right?</h2>

@@ -96,6 +96,7 @@
   .col .cell{width:46px; height:46px;}
   .col .mark{position:absolute; right:-4px; top:-10px; font-size:15px; font-weight:700; width:20px; height:20px; line-height:20px; text-align:center; border-radius:50%;}
   .col .mark.ok{background:var(--green); color:#fff;} .col .mark.no{background:var(--accent); color:#fff;}
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}
   /* 3-cycle top view */
   .cyc{position:relative; display:inline-grid; grid-template-columns:repeat(3,40px); gap:5px; padding:12px; background:#2b2b2b; border-radius:12px;}
   .cyc .cell{width:40px; height:40px;}
@@ -207,6 +208,18 @@
     <li><b>Re-check.</b> All four matched? Done. If not, find the solved edge again, park it at the back, and run
       it once more. Two passes is the most you'll ever need.</li>
   </ol>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div>
+        <div class="band" style="grid-template-columns:46px;">
+          <div class="col"><span class="cell r hi"></span><span class="cell r hi"></span></div>
+        </div>
+        <div style="text-align:center; margin-top:8px;"><span class="pin">solved edge &rarr; goes to the BACK</span></div>
+      </div>
+    </div>
+    <div class="dcap">A "solved edge" is one whose side colour already matches its centre (ringed). Park THIS one at the back so the 3-cycle spins the other three home.</div>
+  </div>
 
   <div class="lab">
     <h3>Practice: which edges are matched? <span class="win">tap to check</span></h3>

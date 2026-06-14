@@ -42,6 +42,27 @@
   .toc ol{margin:6px 0 0;}
   .foot{margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
   .home{display:inline-block; margin-bottom:18px; font-size:.9rem;}
+
+  /* ===== CUBE DIAGRAM KIT ===== */
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);}
+  .x{background:var(--c-gray); box-shadow:none;}
+  .face{display:inline-grid; grid-template-columns:repeat(3,34px); gap:5px; padding:8px;
+    background:#2b2b2b; border-radius:10px;}
+  .diagram{display:flex; gap:26px; flex-wrap:wrap; align-items:center; justify-content:center; margin:8px 0 4px;}
+  .dwrap{margin:22px 0;}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
+  .arrow{font-size:1.8rem; color:var(--accent); font-weight:700; line-height:1;}
+  .stk{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .stk .lbl{font-size:.7rem; font-family:ui-monospace,monospace; color:var(--muted); text-align:center; max-width:150px;}
+  /* POINTING vocabulary */
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}   /* green ring = "this is the piece I mean" */
+  .cell.ha{outline:3px solid var(--accent); outline-offset:2px;} /* red ring = a problem / the wrong one */
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace;
+    letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;} .ptag.r{background:var(--accent);} .ptag.k{background:#1a1a1a;}
 </style>
 </head>
 <body>
@@ -65,6 +86,18 @@
   three other faces each have 1–2 pieces in the wrong spot.</b> Look closely and it's a very specific pattern:
   <b>two adjacent corners are swapped</b> with each other, <b>and</b> <b>two adjacent edges are swapped</b> too.
   Everything is <em>oriented</em> (yellow facing up), just sitting in the wrong places.</p>
+
+  <div class="dwrap"><div class="diagram">
+    <div class="stk">
+      <div class="lbl"><span class="ptag r">2 corners swapped</span> &nbsp; <span class="ptag g">2 edges swapped</span></div>
+      <div class="face">
+        <span class="cell y ha"></span><span class="cell y hi"></span><span class="cell y ha"></span>
+        <span class="cell y hi"></span><span class="cell y"></span><span class="cell y"></span>
+        <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+      </div>
+    </div>
+  </div>
+  <p class="dcap">Top is all yellow (oriented), but the red-ringed corner pair and the green-ringed edge pair are each swapped — a parity case no 3-cycle can fix.</p></div>
 
   <p class="lab">Why the simple moves can't fix it</p>
   <div class="why">

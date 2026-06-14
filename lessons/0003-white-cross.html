@@ -9,6 +9,9 @@
     --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
     --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
     --card:#ffffff;
+    /* cube sticker colours */
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#cfccc4;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -105,6 +108,37 @@
   kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
   .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
   .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  /* ===== CUBE DIAGRAM KIT ===== */
+  .cell{width:34px; height:34px; border-radius:5px; border:1px solid rgba(0,0,0,.18);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);}
+  .x{background:var(--c-gray); box-shadow:none;}
+  .face{display:inline-grid; grid-template-columns:repeat(3,34px); gap:5px; padding:8px;
+    background:#2b2b2b; border-radius:10px;}
+  .diagram{display:flex; gap:26px; flex-wrap:wrap; align-items:center; justify-content:center; margin:8px 0 4px;}
+  .dwrap{margin:22px 0;}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
+  .arrow{font-size:1.8rem; color:var(--accent); font-weight:700; line-height:1;}
+  .stk{display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .stk .lbl{font-size:.72rem; font-family:ui-monospace,monospace; color:var(--muted); text-align:center; max-width:160px; line-height:1.4;}
+  .cell.hi{outline:3px solid #1f7a4d; outline-offset:2px;}
+  .cell.ha{outline:3px solid var(--accent); outline-offset:2px;}
+  .ptile{display:inline-grid; gap:4px; padding:7px; background:#2b2b2b; border-radius:9px; vertical-align:middle;}
+  .ptile.center{grid-template-columns:34px;}
+  .ptile.edge{grid-template-columns:repeat(2,34px);}
+  .ptile.corner{grid-template-columns:repeat(2,34px); grid-template-rows:repeat(2,34px);}
+  .ptile.corner .gap{visibility:hidden;}
+  .ptag{display:inline-block; background:#7b5cd6; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace;
+    letter-spacing:.04em; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .ptag.g{background:#1f7a4d;} .ptag.r{background:var(--accent);} .ptag.k{background:#1a1a1a;}
+  /* unfolded band of side columns (matched vs fake) */
+  .band{display:inline-grid; grid-template-columns:repeat(4,46px); gap:10px; padding:12px 14px; background:#2b2b2b; border-radius:12px;}
+  .col{display:grid; grid-template-rows:repeat(2,46px); gap:6px; position:relative;}
+  .col .cell{width:46px; height:46px;}
+  .col .mark{position:absolute; right:-4px; top:-10px; font-size:15px; font-weight:700; width:20px; height:20px; line-height:20px; text-align:center; border-radius:50%;}
+  .col .mark.ok{background:var(--green); color:#fff;} .col .mark.no{background:var(--accent); color:#fff;}
 </style>
 </head>
 <body>
@@ -144,6 +178,26 @@
     <em>other</em> color matches the center it sits against. Both, or it's in the wrong slot.</p>
   </div>
 
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="stk">
+        <div class="lbl">a white+red <span class="ptag g">edge</span></div>
+        <div class="ptile edge"><span class="cell w"></span><span class="cell r hi"></span></div>
+        <div class="lbl"><span class="ptag g">this 2nd colour must match its centre</span></div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stk">
+        <div class="band">
+          <div class="col"><span class="cell r"></span><span class="cell r"></span><span class="mark ok">&#10003;</span></div>
+          <div class="col"><span class="cell r"></span><span class="cell g"></span><span class="mark no">&#10007;</span></div>
+        </div>
+        <div class="lbl">edge red over <b>red centre</b> = home · edge red over <b>green centre</b> = fake</div>
+      </div>
+    </div>
+    <p class="dcap">White up is not enough — the side colour decides the home. The ringed red sticker
+    must sit against the red centre; over any other centre it's a fake cross, even with white pointing up.</p>
+  </div>
+
   <p>This is Lesson 1's place-vs-orientation idea made real. Each white edge has two colors — say
   white+red. Its one true home is between the white center and the red center. If you just jam any
   white sticker on top without checking the second color, you've oriented it but <em>mis-placed</em>
@@ -155,6 +209,22 @@
     cross because each edge lives between two centers; placed correctly they radiate out from the
     white center like spokes, each spoke's side color flowing into the matching face. The cross is
     just "all four white edges, home."
+  </div>
+
+  <div class="dwrap">
+    <div class="diagram">
+      <div class="stk">
+        <div class="lbl">top-down view of the white face</div>
+        <div class="face">
+          <span class="cell x"></span><span class="cell w"></span><span class="cell x"></span>
+          <span class="cell w"></span><span class="cell w hi"></span><span class="cell w"></span>
+          <span class="cell x"></span><span class="cell w"></span><span class="cell x"></span>
+        </div>
+        <div class="lbl"><span class="ptag g">white centre</span> the fixed anchor (ringed)</div>
+      </div>
+    </div>
+    <p class="dcap">The 4 white EDGES form the + around the fixed white centre (ringed); the gray corners
+    are filled later. Each edge is a spoke radiating out from the centre.</p>
   </div>
 
   <h2>The method — white center on top</h2>
@@ -196,6 +266,17 @@
     single quarter-turn plus a small adjustment to feed it in white-up. Easiest fix: just turn that
     face <em>once</em> (<span class="mv">F</span>) to bring it to the middle, line it up, and tuck it
     in — or ask me and I'll walk the exact turns for your specific edge.</p>
+    <div class="dwrap">
+      <div class="diagram">
+        <div class="stk">
+          <div class="lbl">a white+blue <span class="ptag">edge</span> in the bottom layer</div>
+          <div class="ptile edge"><span class="cell w ha"></span><span class="cell b"></span></div>
+          <div class="lbl"><span class="ptag r">white facing OUT = flipped</span></div>
+        </div>
+      </div>
+      <p class="dcap">When the red-ringed white sticker faces out to the side instead of down, a plain 180°
+      lift would land white on the side, not the top. Re-orient the edge first, then drop it in white-up.</p>
+    </div>
   </div>
 
   <h2>Quick check</h2>
