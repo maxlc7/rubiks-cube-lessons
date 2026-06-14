@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 10 — The Finish: Twisting the Corners</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#cfccc4;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;}
+  h1{font-size:2.4rem; line-height:1.12; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;} .mv.x2{background:#1f7a4d;}
+  .algo{text-align:center; margin:8px 0;}
+  .algo .mv{font-size:1.35rem; padding:8px 16px; margin:3px;}
+  .algobox{background:#1a1a1a; border-radius:12px; padding:22px 16px; margin:14px 0; text-align:center;}
+  .algobox .nm{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:#ffd400; margin-bottom:12px;}
+  .algobox .sm{font-family:ui-monospace,monospace; color:#9fb6e8; font-size:.72rem; margin-top:12px;}
+  .mission{background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;}
+  .mission strong{color:var(--amber);}
+  .big-idea{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.3rem; line-height:1.4; margin:0; font-weight:600;}
+  .callback{background:#eef3fb; border:1px solid #cdddf5; border-left:4px solid var(--blue);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .callback strong{color:#1f4fa8;}
+  .warn{background:#fdf3f2; border:1px solid #f0cfc9; border-left:4px solid var(--accent);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.98rem;}
+  .warn strong{color:var(--accent);}
+  .warn h3{margin:0 0 8px; color:var(--accent);}
+  .warn h3::before{content:"⚠️ ";}
+  .key{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .key strong{color:#5b3fb0;}
+  .hands{background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px; padding:18px 22px; margin:22px 0;}
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ ";}
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; background:#faf9f6;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;}
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .ceiling strong{color:#5b3fb0;}
+  .ask{margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;}
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+  .trophy{font-size:3rem; text-align:center; margin:10px 0;}
+
+  .cell{width:30px; height:30px; border-radius:5px; border:1px solid rgba(0,0,0,.18); box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);} .x{background:var(--c-gray);}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
+
+  .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .lab h3{margin-top:0;} .lab h3::before{content:"🧭 ";}
+  .cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin:14px 0 4px;}
+  .mcard{background:#faf9f6; border:1px solid var(--line); border-radius:12px; padding:16px 14px; width:210px; text-align:center;}
+  .mcard .ctxt{font-size:.82rem; color:#444; margin:4px 0 10px; min-height:3.6em;}
+  .mbtns{display:flex; gap:8px; justify-content:center;}
+  .mbtn{flex:1; cursor:pointer; font:inherit; font-size:.82rem; padding:7px 4px; border-radius:8px; border:1px solid var(--line); background:#fff; transition:.15s;}
+  .mbtn:hover{background:#f1eee8;}
+  .mbtn.gd{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .mbtn.bd{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .mfb{font-size:.8rem; margin-top:9px; min-height:1.2em; font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 10 · The Finish</p>
+  <h1>Twisting the Corners</h1>
+  <p class="sub">Every piece is home. One tiny move, repeated, twists the last corners yellow — and the cube solves itself in your hands.</p>
+
+  <p class="recall"><b>From Lesson 9:</b> all four top corners are in their correct homes. Some are still
+  <em>twisted</em> — yellow facing sideways instead of up. That twist is the very last thing standing between you
+  and a solved cube. Keep <b>yellow on top, white on the bottom</b>.</p>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>Twist each corner in place until its yellow faces up — one corner at a time, always in the same
+    front-right-top spot. Bring the next twisted corner there by turning <em>only the top</em>. On the last twist,
+    the whole cube clicks to solved.</p>
+  </div>
+
+  <div class="callback">
+    <strong>Place, then face — the very last time.</strong> Since Lesson 1 you've separated <em>where a piece is</em>
+    from <em>which way it faces</em>. Lesson 9 put the corners in the right place. This lesson fixes the facing.
+    That's the whole cube in one idea, and you're about to close it out.
+  </div>
+
+  <h2>The move: a corner-twister</h2>
+  <p>Hold the cube normally — <b>yellow up, white down</b>, a colored face toward you. The corner you're fixing sits
+  at the <b>top-front-right</b> (the upper-right corner of the face you're looking at). The move is just four
+  turns:<sup><a href="#r1">1</a></sup></p>
+  <div class="algobox">
+    <div class="nm">The corner twister</div>
+    <div class="algo">
+      <span class="mv p">R&#39;</span> <span class="mv d">D&#39;</span> <span class="mv">R</span> <span class="mv d">D</span>
+    </div>
+    <div class="sm">R′ = right face back · D′ = bottom back · R = right face · D = bottom — repeat as a unit</div>
+  </div>
+  <p>You do <span class="mv p">R&#39;</span> <span class="mv d">D&#39;</span> <span class="mv">R</span>
+  <span class="mv d">D</span> <b>over and over</b>, watching <em>only</em> that top-front-right corner. Each round
+  nudges its yellow toward the top. When yellow lands on top, you stop and move on.</p>
+
+  <div class="warn">
+    <h3>Read this before you start — it will look like you're destroying the cube</h3>
+    <p style="margin:0 0 8px;">While you repeat <span class="mv p">R&#39;</span> <span class="mv d">D&#39;</span>
+    <span class="mv">R</span> <span class="mv d">D</span>, the bottom two layers will look <b>completely scrambled.</b>
+    <strong>This is normal. Do not stop. Do not try to fix it.</strong> Keep going and it always snaps back.</p>
+    <p style="margin:0;">Three rules that make it work every time:</p>
+    <ul style="margin:6px 0 0;">
+      <li><b>Only twist the corner at top-front-right.</b> Watch that one corner, ignore the chaos elsewhere.</li>
+      <li>When that corner's <b>yellow is on top</b>, do <b>not</b> rotate the whole cube — turn <em>only the top
+        (<span class="mv">U</span>)</em> to bring the next un-yellow corner to top-front-right.</li>
+      <li><b>Never leave a corner half-done.</b> Each corner needs the move repeated <b>2 or 4 times</b> to land
+        yellow-up. Finish it (yellow up) before moving the top.</li>
+    </ul>
+  </div>
+
+  <h2>The full routine</h2>
+  <ol class="steps">
+    <li><b>Yellow up, white down.</b> Find a corner whose yellow is <em>not</em> on top and turn the whole cube so
+      it's at <b>top-front-right.</b></li>
+    <li><b>Repeat</b> <span class="mv p">R&#39;</span> <span class="mv d">D&#39;</span> <span class="mv">R</span>
+      <span class="mv d">D</span>, watching that corner, until its <b>yellow is on top</b> (2 or 4 times). The cube
+      will look wrecked mid-way — keep going.</li>
+    <li><b>Turn only the top</b> (<span class="mv">U</span>) to bring the next un-yellow corner to top-front-right.
+      <em>Do not rotate the whole cube.</em></li>
+    <li><b>Repeat</b> the twister on that corner until its yellow is up.</li>
+    <li><b>Keep going</b> for all four corners. As you finish the last one and turn the top to line it up — the
+      <b>entire cube solves.</b> 🎉</li>
+  </ol>
+
+  <div class="key">
+    <strong>Why the chaos comes back.</strong> <span class="mv p">R&#39;</span> <span class="mv d">D&#39;</span>
+    <span class="mv">R</span> <span class="mv d">D</span> only really <em>changes</em> the corner sitting at
+    top-front-right — everything else it disturbs, it later puts back (repeat it 6 times from solved and you're back
+    to solved). Because you only ever turn the <em>top</em> between corners — never the whole cube, never the bottom
+    on its own — each finished corner returns to a finished spot. When the last twist lands, every borrowed piece is
+    home. That's why it looks broken right up until the instant it's perfect.<sup><a href="#r1">1</a></sup>
+  </div>
+
+  <div class="lab">
+    <h3>Practice: keep going, or move on? <span class="win">tap to check</span></h3>
+    <div class="cards">
+      <div class="mcard" data-ok="go">
+        <div class="ctxt">You're mid-routine. The bottom layers look totally scrambled and your top-front-right corner still shows yellow on the <b>side</b>.</div>
+        <div class="mbtns"><button class="mbtn" data-v="go">Keep R′D′RD</button><button class="mbtn" data-v="stop">Stop, it's broken</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="next">
+        <div class="ctxt">Your top-front-right corner now shows <b>yellow on top.</b> Two other corners still aren't yellow.</div>
+        <div class="mbtns"><button class="mbtn" data-v="next">Turn U to next corner</button><button class="mbtn" data-v="rotate">Rotate whole cube</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="go">
+        <div class="ctxt">You did R′D′RD once. The corner isn't yellow-up yet. Should you turn the top now?</div>
+        <div class="mbtns"><button class="mbtn" data-v="go">No — finish this corner first</button><button class="mbtn" data-v="next">Yes, turn U now</button></div>
+        <div class="mfb"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: solve the cube <span class="win">~5 min · THE FINISH</span></h3>
+    <ol class="steps">
+      <li>Un-yellow corner to <b>top-front-right.</b></li>
+      <li><span class="mv p">R&#39;</span> <span class="mv d">D&#39;</span> <span class="mv">R</span> <span class="mv d">D</span> until its yellow is up (ignore the mess).</li>
+      <li><span class="mv">U</span> to bring the next un-yellow corner to top-front-right.</li>
+      <li>Repeat until all four are yellow — the cube finishes itself on the last one.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>When the last corner clicks:</b> six solid faces. You solved a Rubik's Cube —
+    and you can explain why every stage worked.</p>
+  </div>
+
+  <div class="snag">
+    <h4>Snag — it ended scrambled, not solved</h4>
+    <p style="margin:0;">Almost always one of two things: you <b>rotated the whole cube</b> between corners (only ever
+    turn the top, <span class="mv">U</span>), or you <b>stopped a corner half-twisted</b> and moved on. Both break the
+    "everything comes back" guarantee. If it's scrambled, no worries — you have all ten lessons now; start again from
+    the white cross.</p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>The finish 🧠</h3>
+    <div class="q" data-correct="b">
+      <div class="qt">1. Mid-routine the cube looks scrambled. What does that mean?</div>
+      <button class="opt" data-k="a">You made a mistake — start over</button>
+      <button class="opt" data-k="b">Nothing's wrong — it always looks broken mid-twist and snaps back; keep going</button>
+      <button class="opt" data-k="c">The cube is defective</button>
+      <div class="fb"></div>
+    </div>
+    <div class="q" data-correct="c">
+      <div class="qt">2. A corner's yellow is finally on top. How do you bring the next corner to the twisting spot?</div>
+      <button class="opt" data-k="a">Rotate the whole cube</button>
+      <button class="opt" data-k="b">Flip it over</button>
+      <button class="opt" data-k="c">Turn only the top layer (U)</button>
+      <div class="fb"></div>
+    </div>
+    <div class="q" data-correct="a">
+      <div class="qt">3. Why does the cube end up fully solved even though you only twisted corners?</div>
+      <button class="opt" data-k="a">The other pieces were already solved; the move borrows and returns them, so only the corner twists stick</button>
+      <button class="opt" data-k="b">Luck</button>
+      <button class="opt" data-k="c">The centers move into place</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="trophy">🧊✨</div>
+  <div class="ceiling">
+    <strong>You did it — and here's what you actually built.</strong> You can read a cube as <em>pieces</em>, not
+    stickers. You solved all six faces with methods you understand: deliver the cross, screw in corners, insert the
+    belt with mirror algorithms, and read the last layer as orientation-then-permutation. Where next, per your
+    mission: <b>(1)</b> get faster at <em>reading</em> the last layer (predict the case before you act); <b>(2)</b>
+    learn <em>why</em> God's Number is 20 and why humans trade move-count for memorable methods; <b>(3)</b> when you
+    want a real challenge, the community at <a href="https://www.reddit.com/r/Cubers/">r/Cubers</a> is the place to
+    test your understanding. You came for cube literacy. You have it.
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Ended scrambled and want to know which rule slipped? Tell me
+    what you did. Want to go deeper on <em>why</em> any algorithm works, or start shaving off time? Just say the word.
+    And when it's solved — tell me <kbd>SOLVED</kbd> and take the win. 🏆
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Last-layer corner orientation by repeated <code>R' D' R D</code>, keeping an unsolved corner at the
+      front-right-top and turning only U between corners — <a href="https://solvethecube.com/">SolveTheCube, Beginner
+      Method</a> (final step); cross-checked with <a href="https://ruwix.com/the-rubiks-cube/how-to-solve-the-rubiks-cube-beginners-method/">Ruwix, Beginner's Method</a>.</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 10 — the finish · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {ok:"✓ Exactly. You understand the finish.", no:"Not quite — re-read the section above and try again."};
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){btn.classList.add('correct'); fb.textContent=msgs.ok; fb.className='fb show ok';}
+        else{btn.classList.add('wrong'); q.querySelector('[data-k="'+correct+'"]').classList.add('correct'); fb.textContent=msgs.no; fb.className='fb show no';}
+      });
+    });
+  });
+  document.querySelectorAll('.mcard').forEach(function(card){
+    var ok = card.getAttribute('data-ok');
+    var fb = card.querySelector('.mfb');
+    var notes = {
+      go:"✓ Keep going — finish the corner (yellow on top) before anything else. The mess is temporary.",
+      next:"✓ Right — turn ONLY the top to bring the next un-yellow corner to the spot.",
+      stopwrong:"✗ Don't stop — it looks broken mid-twist every time, then snaps back. Keep R′D′RD.",
+      rotatewrong:"✗ Never rotate the whole cube — only turn the top (U), or finished corners get undone.",
+      earlywrong:"✗ Not yet — moving the top mid-corner breaks it. Finish this corner to yellow-up first."
+    };
+    card.querySelectorAll('.mbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.getAttribute('data-v');
+        card.querySelectorAll('.mbtn').forEach(function(b){b.classList.remove('gd','bd');});
+        var right = (v === ok);
+        btn.classList.add(right ? 'gd' : 'bd');
+        if(right){ fb.textContent = notes[ok]; fb.style.color='#1d6b3c'; }
+        else {
+          fb.textContent = (v==='stop') ? notes.stopwrong : (v==='rotate') ? notes.rotatewrong : notes.earlywrong;
+          fb.style.color='#9a2b1e';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
