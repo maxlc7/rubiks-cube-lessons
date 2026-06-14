@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 9 — Positioning the Last Corners (homes first, twists later)</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --paper:#fbfaf7; --line:#e4e0d8; --accent:#c0392b;
+    --blue:#2d6cdf; --green:#2e8b57; --amber:#d68910; --muted:#6b6b6b;
+    --card:#ffffff;
+    --c-white:#f6f5f1; --c-yellow:#ffd400; --c-red:#d8312a;
+    --c-orange:#ec8b1f; --c-green:#28a05a; --c-blue:#2d6cdf; --c-gray:#cfccc4;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px; margin:0 auto; padding:56px 28px 96px;}
+  .kicker{font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12px;
+    letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 10px;}
+  h1{font-size:2.4rem; line-height:1.12; margin:0 0 8px; font-weight:700;}
+  .sub{font-size:1.15rem; color:var(--muted); margin:0 0 28px; font-style:italic;}
+  h2{font-size:1.5rem; margin:48px 0 12px; border-bottom:2px solid var(--line); padding-bottom:8px;}
+  h3{font-size:1.15rem; margin:28px 0 6px;}
+  p{margin:0 0 16px;}
+  a{color:var(--blue); text-decoration:none; border-bottom:1px solid #bcd0f5;}
+  a:hover{border-bottom-color:var(--blue);}
+  sup a{border:none; font-size:.7em; padding:0 1px;}
+  code,.mv{font-family:ui-monospace,"SF Mono",Menlo,monospace;}
+  .mv{background:#1a1a1a; color:#fbfaf7; border-radius:6px; padding:2px 9px; font-size:.92em; font-weight:600; display:inline-block;}
+  .mv.p{background:#5b3fb0;} .mv.d{background:#2d6cdf;} .mv.x2{background:#1f7a4d;}
+  .algo{text-align:center; margin:8px 0;}
+  .algo .mv{font-size:1.12rem; padding:6px 13px; margin:2px;}
+  .algobox{background:#1a1a1a; border-radius:12px; padding:20px 16px; margin:14px 0; text-align:center;}
+  .algobox .nm{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:#ffd400; margin-bottom:12px;}
+  .mission{background:#fff8f1; border:1px solid #f0d9c2; border-left:4px solid var(--amber);
+    border-radius:8px; padding:16px 20px; margin:0 0 8px; font-size:.98rem;}
+  .mission strong{color:var(--amber);}
+  .big-idea{background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:24px 26px; margin:24px 0; box-shadow:0 1px 0 rgba(0,0,0,.03);}
+  .big-idea .label{font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;}
+  .big-idea p{font-size:1.3rem; line-height:1.4; margin:0; font-weight:600;}
+  .callback{background:#eef3fb; border:1px solid #cdddf5; border-left:4px solid var(--blue);
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .callback strong{color:#1f4fa8;}
+  .key{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .key strong{color:#5b3fb0;}
+  .hands{background:#f3f8f4; border:1px solid #cfe6d6; border-radius:10px; padding:18px 22px; margin:22px 0;}
+  .hands h3{margin-top:0; color:var(--green);}
+  .hands h3::before{content:"✋ ";}
+  ol.steps{margin:8px 0 0; padding-left:22px;}
+  ol.steps li{margin-bottom:10px;}
+  .snag{background:#fffaf2; border:1px solid #f0e2c8; border-radius:9px; padding:14px 18px; margin:16px 0; font-size:.93rem;}
+  .snag h4{margin:0 0 6px; color:var(--amber); font-size:1rem;}
+  .quiz{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .quiz h3{margin-top:0;}
+  .q{margin:18px 0;}
+  .q .qt{font-weight:600; margin-bottom:8px;}
+  .opt{display:block; width:100%; text-align:left; cursor:pointer; background:#faf9f6;
+    border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:6px 0; font:inherit; font-size:.98rem;
+    transition:background .15s,border-color .15s;}
+  .opt:hover{background:#f1eee8;}
+  .opt.correct{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .opt.wrong{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .fb{font-size:.92rem; margin-top:8px; padding:10px 12px; border-radius:8px; display:none;}
+  .fb.show{display:block;}
+  .fb.ok{background:#e7f6ec; color:#1d6b3c;}
+  .fb.no{background:#fbeae8; color:#9a2b1e;}
+  .ceiling{background:#f4f1fb; border:1px solid #ddd3f0; border-left:4px solid #7b5cd6;
+    border-radius:8px; padding:16px 20px; margin:22px 0; font-size:.96rem;}
+  .ceiling strong{color:#5b3fb0;}
+  .ask{margin-top:48px; padding:18px 22px; border:1px dashed var(--accent);
+    border-radius:10px; background:#fffaf9; font-size:.98rem;}
+  .ask strong{color:var(--accent);}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid var(--line); font-size:.82rem; color:var(--muted);}
+  .foot ol{padding-left:18px;}
+  .foot a{font-size:.82rem;}
+  kbd{font-family:ui-monospace,monospace; background:#eee; border:1px solid #ccc; border-bottom-width:2px; border-radius:4px; padding:1px 6px; font-size:.85em;}
+  .win{display:inline-block; background:var(--green); color:#fff; font-size:.72rem; font-family:ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; vertical-align:middle;}
+  .recall{font-size:.9rem; color:var(--muted); border-left:3px solid var(--line); padding-left:14px; margin:0 0 28px;}
+
+  .cell{width:30px; height:30px; border-radius:5px; border:1px solid rgba(0,0,0,.18); box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);}
+  .w{background:var(--c-white);} .y{background:var(--c-yellow);} .r{background:var(--c-red);}
+  .o{background:var(--c-orange);} .g{background:var(--c-green);} .b{background:var(--c-blue);} .x{background:var(--c-gray);}
+  .dcap{font-size:.82rem; color:var(--muted); text-align:center; margin:8px 0 0; font-style:italic;}
+  .fru{display:inline-block; background:#1f7a4d; color:#fff; font-size:.66rem; font-family:ui-monospace,monospace; padding:2px 7px; border-radius:20px;}
+
+  .lab{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:22px 0;}
+  .lab h3{margin-top:0;} .lab h3::before{content:"🏠 ";}
+  .cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin:14px 0 4px;}
+  .mcard{background:#faf9f6; border:1px solid var(--line); border-radius:12px; padding:14px; width:200px; text-align:center;}
+  .trio{display:flex; gap:5px; justify-content:center; margin-bottom:6px;}
+  .mcard .ctxt{font-size:.78rem; color:#444; margin:8px 0 10px; min-height:4.2em;}
+  .mbtns{display:flex; gap:8px; justify-content:center;}
+  .mbtn{flex:1; cursor:pointer; font:inherit; font-size:.84rem; padding:7px 4px; border-radius:8px; border:1px solid var(--line); background:#fff; transition:.15s;}
+  .mbtn:hover{background:#f1eee8;}
+  .mbtn.gd{background:#e7f6ec; border-color:var(--green); color:#1d6b3c;}
+  .mbtn.bd{background:#fbeae8; border-color:var(--accent); color:#9a2b1e;}
+  .mfb{font-size:.8rem; margin-top:9px; min-height:1.2em; font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Rubik's Cube · Lesson 9</p>
+  <h1>Positioning the Last Corners</h1>
+  <p class="sub">The home stretch. Get each corner to its right address first — never mind which way it's facing.</p>
+
+  <p class="recall"><b>From Lesson 8:</b> matched yellow cross — every side shows that inverted-T of solid color.
+  The <em>only</em> unsolved pieces on the whole cube are the four top corners. White stays down, yellow up.</p>
+
+  <div class="big-idea">
+    <div class="label">The Big Idea</div>
+    <p>Split the corner job in two. <b>First, send each corner to its correct home</b> (the spot between its three
+    matching faces) — ignoring how it's twisted. <b>Next lesson, you twist them.</b> Place first, face later.</p>
+  </div>
+
+  <div class="callback">
+    <strong>Place vs face — your oldest idea, last appearance.</strong> Since Lesson 1 you've known a piece can be
+    in the right spot but turned the wrong way. Corners are the purest case: a corner can sit in its exact home and
+    still be twisted. So we solve <em>position</em> now and save <em>orientation</em> (the twist) for the finale.
+    And the tool is the same <b>3-cycle</b> you just used on the edges — now aimed at corners.
+  </div>
+
+  <h2>Read it: which corner is already "home"?</h2>
+  <p>A corner is <b>home</b> when its three colors are the three colors of the faces meeting at that spot — in
+  <em>any</em> rotation. Example: the corner that belongs between the red and green faces (with yellow on top) is
+  the red+green+yellow piece. If that piece is sitting there — even twisted so yellow faces sideways — it's
+  home.<sup><a href="#r1">1</a></sup></p>
+
+  <div style="margin:22px 0;">
+    <div class="dcap" style="margin-bottom:8px;">Looking down at the top. The <span class="fru">FRU</span> corner is the one nearest you on the right.</div>
+    <div style="display:flex; justify-content:center;">
+      <div style="display:inline-grid; grid-template-columns:repeat(3,30px); gap:5px; padding:10px; background:#2b2b2b; border-radius:10px; position:relative;">
+        <span class="cell y x"></span><span class="cell y"></span><span class="cell y x"></span>
+        <span class="cell y"></span><span class="cell y"></span><span class="cell y"></span>
+        <span class="cell y x"></span><span class="cell y"></span><span class="cell y x" style="outline:3px solid #1f7a4d; outline-offset:2px;"></span>
+      </div>
+    </div>
+    <div class="dcap">Front = toward you (bottom). The green-outlined corner = FRU (front-right). That's where your already-home corner goes before you run the move.</div>
+  </div>
+
+  <h2>The tool: a corner 3-cycle</h2>
+  <p>Hold a <b>home corner at FRU</b> (front-right-top). This cycles the other three corners around it, leaving the
+  FRU corner and every edge untouched:<sup><a href="#r1">1</a></sup></p>
+  <div class="algobox">
+    <div class="nm">Corner positioner</div>
+    <div class="algo">
+      <span class="mv">U</span> <span class="mv">R</span> <span class="mv p">U&#39;</span> <span class="mv p">L&#39;</span>
+      <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> <span class="mv">L</span>
+    </div>
+  </div>
+
+  <div class="key">
+    <strong>Two cases, one move.</strong> If <em>one</em> corner is already home, put it at FRU and run the move
+    (repeat up to ~3×, keeping a home corner at FRU each time, until all four are home). If <em>no</em> corner is
+    home, just run it once from any angle — that creates a home corner — then proceed. It's another pure 3-cycle,
+    so edges and lower layers never move.<sup><a href="#r1">1</a></sup>
+  </div>
+
+  <div class="lab">
+    <h3>Practice: is this corner home? <span class="win">tap to check</span></h3>
+    <p style="margin-top:0; font-size:.94rem;">You're shown the corner's three colors and which two side faces it sits between (top is always yellow). Home or not?</p>
+    <div class="cards">
+      <div class="mcard" data-ok="yes">
+        <div class="trio"><span class="cell r"></span><span class="cell g"></span><span class="cell y"></span></div>
+        <div class="ctxt">Corner colors: red, green, yellow.<br>It's sitting between the <b>red</b> and <b>green</b> faces.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Home ✓</button><button class="mbtn" data-v="no">Wrong spot ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="no">
+        <div class="trio"><span class="cell r"></span><span class="cell b"></span><span class="cell y"></span></div>
+        <div class="ctxt">Corner colors: red, blue, yellow.<br>It's sitting between the <b>red</b> and <b>green</b> faces.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Home ✓</button><button class="mbtn" data-v="no">Wrong spot ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+      <div class="mcard" data-ok="yes">
+        <div class="trio"><span class="cell y"></span><span class="cell o"></span><span class="cell b"></span></div>
+        <div class="ctxt">Corner colors: yellow, orange, blue (just twisted).<br>It's between the <b>orange</b> and <b>blue</b> faces.</div>
+        <div class="mbtns"><button class="mbtn" data-v="yes">Home ✓</button><button class="mbtn" data-v="no">Wrong spot ✗</button></div>
+        <div class="mfb"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hands">
+    <h3>Hands-on: get all four corners home <span class="win">~5 min</span></h3>
+    <ol class="steps">
+      <li><b>White down, yellow up.</b> Check each top corner: are its 3 colors the trio of the 3 faces around it (any twist counts)?</li>
+      <li><b>Found a home corner?</b> Turn the whole cube so it sits at <b>FRU</b> (front-right-top). No home corner? Skip to step 4.</li>
+      <li><b>Run</b> <span class="mv">U</span> <span class="mv">R</span> <span class="mv p">U&#39;</span> <span class="mv p">L&#39;</span> <span class="mv">U</span> <span class="mv p">R&#39;</span> <span class="mv p">U&#39;</span> <span class="mv">L</span>. Re-check; repeat with a home corner at FRU until all four are home.</li>
+      <li><b>No home corner at all?</b> Run the move once from any angle — now one corner will be home. Go back to step 2.</li>
+      <li><b>All four corners home.</b> They're in the right addresses but some are twisted (yellow not on top). <em>That's expected.</em> The very next lesson twists them and finishes the cube.</li>
+    </ol>
+    <p style="margin-bottom:0;"><b>What you just learned:</b> position before orientation. With every piece finally
+    in its home, only the twists remain.</p>
+  </div>
+
+  <div class="snag">
+    <h4>Heads up — don't expect the top to look "better" yet</h4>
+    <p style="margin:0;">After this step the corners are in the right places but likely <b>twisted</b>, so the top
+    will look messy, not more yellow. That's correct. Resist the urge to "fix" it now — the twisting is the next
+    (and final) step. If the corners seem to keep cycling without settling, double-check you're keeping a genuinely
+    <em>home</em> corner at FRU each time.</p>
+  </div>
+
+  <h2>Quick check</h2>
+  <div class="quiz">
+    <h3>Position, not twist 🧠</h3>
+
+    <div class="q" data-correct="b">
+      <div class="qt">1. What does "a corner is home" mean here?</div>
+      <button class="opt" data-k="a">Its yellow sticker is facing up</button>
+      <button class="opt" data-k="b">Its three colors match the three faces meeting at that spot — even if it's twisted</button>
+      <button class="opt" data-k="c">It's on the bottom layer</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="c">
+      <div class="qt">2. Where do you hold an already-home corner before the algorithm?</div>
+      <button class="opt" data-k="a">Bottom-left</button>
+      <button class="opt" data-k="b">It doesn't matter</button>
+      <button class="opt" data-k="c">FRU — front-right-top — so it stays put while the other three cycle</button>
+      <div class="fb"></div>
+    </div>
+
+    <div class="q" data-correct="a">
+      <div class="qt">3. After this step, the top corners are in the right spots but look twisted/messy. Is that a problem?</div>
+      <button class="opt" data-k="a">No — position is done; twisting them is the final lesson</button>
+      <button class="opt" data-k="b">Yes, you made a mistake</button>
+      <button class="opt" data-k="c">Yes, start the whole cube over</button>
+      <div class="fb"></div>
+    </div>
+  </div>
+
+  <div class="ceiling">
+    <strong>Where this is heading.</strong> Every piece is now home — only the corner <em>twists</em> remain. Next
+    is the finale: <b>Lesson 10</b>, a tiny algorithm (<span class="mv p">R&#39;</span> <span class="mv d">D&#39;</span>
+    <span class="mv">R</span> <span class="mv d">D</span>) repeated to twist each corner yellow-up. Fair warning:
+    it'll look like you're scrambling the cube mid-way — you're not. On the last turn, the whole top snaps to solid
+    yellow and you've <em>solved the Rubik's Cube.</em>
+  </div>
+
+  <div class="ask">
+    <strong>I'm your teacher — ask me anything.</strong> Not sure if a corner is home? Tell me its three colors and
+    which two faces it's wedged between, and I'll tell you. Corners won't settle after a few tries? Describe the top
+    and I'll find the home corner for you. When all four corners are in their right spots (twists OK), tell me
+    <kbd>corners placed</kbd> for the final lesson.
+  </div>
+
+  <div class="foot">
+    <p style="margin-bottom:6px;"><b>Sources</b></p>
+    <ol>
+      <li id="r1">Last-layer corner positioning, the 3-cycle <code>U R U' L' U R' U' L</code>, recognizing a
+      correctly-placed corner (between its 3 matching faces, ignoring twist), holding it at FRU, and the "no correct
+      corner" case — <a href="https://solvethecube.com/">SolveTheCube, Beginner Method</a>, Step: Last Layer Corners (Position).</li>
+    </ol>
+    <p style="margin-top:14px;">Lesson 9 of an ongoing course · saved in <code>teach-n-learn/rubiks-cube/lessons/</code></p>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.q').forEach(function(q){
+    var correct = q.getAttribute('data-correct');
+    var fb = q.querySelector('.fb');
+    var msgs = {ok:"✓ Exactly. Place first, face later.", no:"Not quite — re-read the section above and try again."};
+    q.querySelectorAll('.opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        q.querySelectorAll('.opt').forEach(function(b){b.classList.remove('correct','wrong');});
+        var k = btn.getAttribute('data-k');
+        if(k === correct){btn.classList.add('correct'); fb.textContent=msgs.ok; fb.className='fb show ok';}
+        else{btn.classList.add('wrong'); q.querySelector('[data-k="'+correct+'"]').classList.add('correct'); fb.textContent=msgs.no; fb.className='fb show no';}
+      });
+    });
+  });
+  document.querySelectorAll('.mcard').forEach(function(card){
+    var ok = card.getAttribute('data-ok');
+    var fb = card.querySelector('.mfb');
+    var notes = {yes:"✓ Home — its three colors are the trio of faces it sits between. Twist doesn't matter.",
+      no:"✓ Right — blue doesn't belong between red and green, so it's in the wrong spot.",
+      wy:"✗ Look again — do all three colors belong to the faces meeting there?",
+      wn:"✗ Look again — the three colors DO match the surrounding faces, so it IS home (just twisted)."};
+    card.querySelectorAll('.mbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var v = btn.getAttribute('data-v');
+        card.querySelectorAll('.mbtn').forEach(function(b){b.classList.remove('gd','bd');});
+        var right = (v === ok);
+        btn.classList.add(right ? 'gd' : 'bd');
+        if(right){ fb.textContent = (ok==='yes'?notes.yes:notes.no); fb.style.color='#1d6b3c'; }
+        else { fb.textContent = (v==='yes'?notes.wy:notes.wn); fb.style.color='#9a2b1e'; }
+      });
+    });
+  });
+</script>
+</body>
+</html>
